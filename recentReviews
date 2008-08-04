@@ -1,0 +1,20 @@
+#!/usr/bin/python
+import sys
+from twisted.internet import reactor
+from twisted.python import log
+from twisted.web import server, resource, static, twcgi
+
+sys.path.append("/my/site/zope5/Extensions")
+from revyu import recentReviews
+
+class Root(resource.Resource):
+    def __init__(self):
+        resource.Resource.__init__(self)
+        self.children[''] = self
+
+    def render_GET(self, request):
+        return recentReviews().encode('utf-8')
+
+log.startLogging(sys.stdout)
+reactor.listenTCP(9007, server.Site(Root()))
+reactor.run()

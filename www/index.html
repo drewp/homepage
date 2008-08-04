@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Drew Perttula</title>
+
+    <link rel="meta" type="application/rdf+xml" title="FOAF" href="http://bigasterisk.com/foaf.rdf" />
+    <meta name="ICBM" content="37.5, -122.3" />
+    <meta name="DC.title" content="bigasterisk" />
+
+    <style type="text/css">
+      body {
+	background: #111;
+	color: white;
+	margin: 0;
+	xfont-family:arial,sans-serif;
+      }
+      a {
+	  color: #aaf;
+	  text-decoration: none;
+      }
+      a:hover {
+	  text-decoration: underline;
+      }
+      h3, .recentReviews th.title {
+	  background:#1F7946 none repeat scroll 0 0;
+	  font-size:120%;
+	  text-align:left;
+	  padding:7px;
+      }
+      h3, table.recentReviews {
+	  margin:1em 0 .3em;
+      }
+      #bg, #bg-low {
+	  position: absolute;
+	  width: 100%;
+      }
+      #over {
+	  position: absolute;
+	  width: 100%;
+      }
+      #top-row {
+	  width: 100%;
+	  height: 3em;
+	  text-align: center;
+      }
+      #top-row a {
+	  border: 1px outset #00c;
+	  padding: 2em;
+	  line-height: 3em;
+	  padding: .6em;
+	  margin: .2em;
+	  background: #888;
+	  color: white;
+      }
+      #top-row h1 {
+	  float: left;
+	  margin: .25em;
+      }
+      #top-row .buttons {
+	  background: #333;
+      }
+      .panel {
+
+      }
+      #projects {
+
+      }
+      .column3 {
+	  -moz-column-count: 3;
+      }
+      .delicious-tags h2 { 
+	  margin: 0; 
+      }
+      .delicious-tags h2 a {
+	  color: white;
+	  font-size: 80%;
+      }
+      #recent-reviews {
+	  width: 100%;   
+      }
+      #recent-reviews table {
+	  border-collapse: collapse;
+      }
+      #recent-reviews td {
+	  border-top: 1px solid #666;
+	  border-bottom: 1px solid #666;
+      }
+
+      #ast-delicious-tags {
+	  width: 100%;
+      }
+      #ast-delicious-tags h2 {
+	  display: none;
+      }
+
+      #recent-checkins {
+	  width: 100%;
+      }
+      #recent-checkins td.tm {
+	  white-space: nowrap;
+      }
+      #projects-half {
+
+      }
+      #projects div {
+	  border-top: 1px solid #666;
+	  margin-bottom: 5px;
+      }
+      #data-half {
+
+      }
+      #lrsplit td {
+	  vertical-align: top;
+      }
+      #projects img {
+	  width: 30px;
+	  border: 0;
+	  vertical-align: middle;
+      }
+      #projects img:hover {
+	  width: 85px;
+      }
+      #lrsplit td {
+	  padding: 0 .5em 0 .5em;
+      }
+
+      #identica dt a {
+	  color: yellow;
+}
+      #identica dd {
+	  color: #666;
+      }
+
+      #recommendations ul {
+	margin: 0 0 0 2em;
+	padding:0;
+	-moz-column-count: 3;
+      }
+      #recommendations ul li {
+	  list-style: square;
+      }
+      
+      #recommendations ul, #posted span.size, #posted span.date, #identica dd {
+	  font-size: 80%;
+      }
+      #posted ul {
+	  margin: 0 0 0 2em;
+	  padding: 0;
+      }
+      #posted ul li {
+	  list-style: square;
+      }  
+      
+    </style>
+  </head>
+  <body>
+    <div id="over">
+      <div id="top-row">
+	<h1>Drew Perttula</h1>
+	<div class="buttons">
+	  <a class="button" href="/resume">resume</a>
+	  <a class="button" href="/resume/bios">biographies</a>
+	  <a class="button" href="http://drewp.quickwitretort.com/">blog</a>
+	  <a class="button" href="http://bigasterisk.com/darcs/">darcs software repositories</a>
+	</div>
+      </div>
+      <div style="clear:both"/>
+
+      <table id="lrsplit">
+	<tr><td width="50%" class="left">
+	  <div id="projects-half">
+
+	    <div id="recent-checkins" class="panel">
+	      <h3>Recent code changes</h3>
+	      <div>but not really, just a mockup</div>
+	      <table>
+		<tr><th></th><th>Project</th><th>Notes</th></tr>
+		<tr><td class="tm">5 days ago</td><td><a href="">freeway</a></td>
+		<td>don't stop if the 5min file is missing or if a fetch fails </td></tr>
+		<tr><td class="tm">2 weeks ago</td><td><a href="">freeway</a></td>
+		<td>display tweaks </td></tr>
+		<tr><td class="tm">2 weeks ago</td><td><a href="">freeway</a></td>
+		<td>web server now requests new ftp of data at 5min interval ...</td></tr>
+		<tr><td class="tm">3 weeks ago</td><td><a href="">freeway</a></td>
+		<td>nevow web server </td></tr>
+		<tr><td class="tm">3 weeks ago</td><td><a href="">freeway</a></td>
+		<td>new table report </td></tr>
+		<tr><td colspan="3">...</td></tr>
+	      </table>
+	    </div>
+
+	    <div id="projects" class="panel">
+	      <h3>Projects (from old home page)</h3>
+	      <div class="column3">
+		<!-- exhibit, from doap; includes future projects -->
+		<div><a href="/projects/abmcdesk"><img src="../thumbs/abmcdesk.png"/>Old desk from work</a></div>
+		<div><a href="/projects/apartment"><img src="../thumbs/apartment.png"/>My old Berkeley apartment</a></div>
+		<div><a href="/projects/automation"><img src="../thumbs/automation.png"/>Home automation projects</a></div>
+		<div><a href="/projects/bug"><img src="../thumbs/bug.png"/>Walking bug class project</a></div>
+		<div><a href="/projects/calibration"><img src="../thumbs/calibration.png"/>Color calibration experiment</a></div>
+		<div><a href="/projects/carbutton"><img src="../thumbs/carbutton.png"/>The button in my car</a></div>
+		<div><a href="/projects/card"><img src="../thumbs/card.png"/>Business card</a></div>
+		<div><a href="/projects/cog"><img src="../thumbs/cog.png"/>Wine bottle woodsman</a></div>
+		<div><a href="/projects/crack"><img src="../thumbs/crack.png"/>Cracked sphere</a></div>
+		<div><a href="/projects/cs284"><img src="../thumbs/cs284.png"/>Klein bottle topology demonstration</a></div>
+		<div><a href="/projects/cs294"><img src="../thumbs/cs294.png"/>Klein bottle grid object</a></div>
+		<div><a href="/projects/fogcity"><img src="../thumbs/fogcity.png"/>City in fog</a></div>
+		<div><a href="/projects/gate"><img src="../thumbs/gate.png"/>Auto gate latch</a></div>
+		<div><a href="/projects/lego"><img src="../thumbs/lego.png"/>Lego</a></div>
+		<div><a href="/projects/neptune"><img src="../thumbs/neptune.png"/>Neptune movie</a></div>
+		<div><a href="/projects/onelog"><img src="../thumbs/onelog.png"/>Logfile monitor</a></div>
+		<div><a href="/projects/parallel"><img src="../thumbs/parallel.png"/>Using the parallel port with Linux</a></div>
+		<div><a href="/projects/reel"><img src="../thumbs/reel.png"/>Demo reel</a></div>
+		<div><a href="/projects/reflect"><img src="../thumbs/reflect.png"/>Spherical mirror demo</a></div>
+		<div><a href="/projects/richmond"><img src="../thumbs/richmond.png"/>Photos from Richmond Field Station</a></div>
+		<div><a href="/projects/skim"><img src="../thumbs/skim.png"/>skim text file reader</a></div>
+		<div><a href="/projects/toilet"><img src="../thumbs/toilet.png"/>Toilet project</a></div>
+		<div><a href="/projects/water"><img src="../thumbs/water.png"/>Water splashing</a></div>
+		<div>
+		  More:
+		  <div><a href="/projects/blip">blip - interactive batch image processor</a></div>
+		  <div><a href="/projects/countpara">countpara</a></div>
+		  <div><a href="/projects/fid">Fiddler on the Roof lighting project</a></div>
+		  <div><a href="/projects/gasuse">gasuse</a></div>
+		  <div><a href="/projects/gis">gis</a></div>
+		  <div><a href="/projects/grepedit">grepedit</a></div>
+		  <div><a href="/projects/micpower">Microphone power supply</a></div>
+		  <div><a href="/projects/pedals">Serial foot pedals</a></div>
+		  <div><a href="/projects/pyrexdemo">Pyrex demo for baypiggies</a></div>
+		  <div><a href="/projects/sleepingdog">Sleeping Dog short film</a></div>
+		  <div><a href="/projects/straighten">image straightening</a></div>
+		  <div><a href="/projects/summermovies">summermovies</a></div>
+		  <div><a href="/projects/webcam">webcam</a></div>
+		  <div><a href="/projects/zaurus">Zaurus</a></div>
+		</div>
+		<div>
+		  Wikis: 
+		  <a href="/wikis/annocan">Annotated canvas widget</a>; 
+		  <a href="/wikis/essays">Essays</a>; 
+		  <a href="/wikis/hiss">Hiss - </a>; 
+		  <a href="/wikis/machine">My workstation</a>; 
+		  <a href="/wikis/pixel">RGB led remote pixel</a>; 
+		  <a href="/wikis/editor">Video editor</a>
+		</div>
+	      </div>
+	    </div>
+
+	    <div id="posted" class="panel">
+	      <h3>Recent files in post <a href="whatpost.html">[?]</a></h3>
+	    </div>
+
+	  </div>	  
+	</td>
+	<td width="50%">
+	  <div id="data-half">
+
+	    <div id="foaf">
+	      <h3><a href="">FOAF</a> connections</h3>
+	      <div>Spouse: <a href="http://kelsi.quickwitretort.com/">Kelsi Perttula</a></div>      
+	    </div>
+
+	    <div id="identica">
+	      <h3>My <a href="http://identi.ca/drewp">identi.ca</a> feed</h3>
+	    
+	    </div>
+
+	    <div class="panel" id="ast-delicious-tags">
+	      <h3>My <a href="http://delicious.com/drewpca">delicious</a> tags</h3>
+	      <script type="text/javascript" src="http://feeds.delicious.com/v1/js/tags/drewpca?count=51;size=10-18;color=87ceeb-0000ff;title=my%20del.icio.us%20tags"></script>
+	    </div>
+
+	    <div id="recent-reviews" class="panel">
+	      <div id="recent-reviews-filler">filler</div>
+	    </div>
+
+	    <div id="recommendations" class="panel">
+	      <h3>Recommendations <a href="recs.html">[?]</a></h3>
+	    </div>
+
+	  </div>
+	</td></tr>
+      </table>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
+
+    <script type="text/javascript">
+      new Ajax.Request("http://bigasterisk.com/proxy/identica/json",
+		       {method: 'get',
+			evalJSON: 'force',
+			onSuccess:function(transport) {
+			    var now = new Date().valueOf();
+			    var msgs = new Element('dl');
+			    transport.responseJSON.value.items.each(function(update) {
+				var message = update.title.replace(/^drewp: /, '');
+				
+				var posted = update['y:published'].utime * 1000;
+				
+				var displayDate;
+				if (posted < now - 86400000) {
+				    displayDate = new Date(posted).toJSON().replace(/\"?(.*)T.*/, "$1");
+				} else {
+				    var mins = (now - posted) / 1000 / 60;
+				    if (mins < 60) {
+					displayDate = Math.ceil(mins) + " minutes ago";
+				    } else {
+					displayDate = Math.ceil(mins / 60) + " hours ago";
+				    }
+				}
+				Element.insert(msgs, new Element('dt').update(new Element('a', {href: update.link}).update(message)));
+				Element.insert(msgs, new Element('dd').update("posted "+displayDate));
+      
+			    });
+			    Element.insert($('identica'), msgs);
+			}});
+
+
+      new Ajax.Request("http://bigasterisk.com/recentReviews/", 
+		       {method: 'get', 
+			onSuccess: function(transport) { 
+			    Element.replace($('recent-reviews-filler'), transport.responseText); 
+			}});
+
+      new Ajax.Request("http://bigasterisk.com/recentPostFiles/", 
+		       {method: 'get', 
+			onSuccess: function(transport) { 
+			    Element.insert($('posted'), transport.responseText); 
+			}});
+
+      var sections = [
+	  {id:'recommended-extension', 'title':'Firefox extensions', 'tags' : 'firefox+extension+recommended'},
+	  {id:'recommended-webapp', 'title':'Web apps', 'tags' : 'webapp+recommended'},
+	  {id:'recommended-tool', 'title':'Software tools', 'tags' : 'tool+recommended'},
+      ];
+      
+      sections.each(function(section) {
+	  var elem = new Element('div', {'id' : section.id}).update(section.title);
+	  
+	  var ul = new Element('ul');
+	  Element.insert(elem, ul);
+	  Element.insert($('recommendations'), elem);
+	  
+	  var r = new Ajax.Request("http://bigasterisk.com/proxy/delicious/v2/json/drewpca/" + section.tags,
+	      {method: 'get',
+	      evalJSON: 'force',
+	      onSuccess:function(transport) {
+		  transport.responseJSON.each(function(post) { 
+		      Element.insert(ul, new Element('li').update(new Element('a', {'href' : post.u}).update(post.d)));
+		  });
+	      }});
+      });
+    </script>
+
+
+  </body>
+</html>

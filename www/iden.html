@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title></title>
+  </head>
+  <body>
+
+    <div id="result"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
+    <script type="text/javascript">
+
+      new Ajax.Request("http://bigasterisk.com/proxy/identica/json",
+		       {method: 'get',
+			evalJSON: 'force',
+			onSuccess:function(transport) {
+			    var now = new Date().valueOf();
+			    var msgs = new Element('dl');
+			    transport.responseJSON.value.items.each(function(update) {
+				var message = update.title.replace(/^drewp: /, '');
+				
+				var posted = update['y:published'].utime * 1000;
+				
+				var displayDate;
+				if (posted < now - 86400000) {
+				    displayDate = new Date(posted).toJSON().replace(/\"?(.*)T.*/, "$1");
+				} else {
+				    var mins = (now - posted) / 1000 / 60;
+				    if (mins < 60) {
+					displayDate = Math.ceil(mins) + " minutes ago";
+				    } else {
+					displayDate = Math.ceil(mins / 60) + " hours ago";
+				    }
+				}
+				Element.insert(msgs, new Element('dt').update(message));
+				Element.insert(msgs, new Element('dd').update("posted "+displayDate));
+      
+			    });
+			    Element.insert($('result'), msgs);
+			}});
+
+    </script>
+  </body>
+</html>

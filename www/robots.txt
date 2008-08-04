@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: *.dv$
+Disallow: *.fli$
+Disallow: /wikis/*/diff*
+Disallow: /post/
