@@ -1,0 +1,20 @@
+#!/bin/sh -e
+# Generate Atom feeds for all my Darcs repositories.
+# Adam Sampson <ats@offog.org.
+
+# modified for this install by drewp@bigasterisk.com, 2008-08-03
+
+outurl="http://darcs.bigasterisk.com/"
+
+cd /my/darcs
+for dir in *; do
+	if [ -d $dir ] ; then
+		darcs changes --repodir $dir --last 50 --xml-output | \
+			xsltproc \
+				--param repoURL "'$outurl$dir/'" \
+				--param repoName "'$dir'" \
+				--param feedURL "'$outurl$dir.atom'" \
+				/my/site/homepage/darcsatom.xslt - \
+				>/my/site/homepage/darcsatom.out/$dir.atom
+	fi
+done

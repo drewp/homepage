@@ -152,7 +152,26 @@
       #posted ul li {
 	  list-style: square;
       }  
-      
+
+      table.darcsChanges {
+	  border-collapse: collapse;
+      }
+      #recent-checkins td {
+	  margin: 0px;
+	  padding: 2px;
+	  vertical-align: top;
+	  border-top: 1px solid #666;
+	  border-bottom: 1px solid #666;
+      }
+      .darcsChanges .zebra0 {background: #262626;}
+      .darcsChanges .zebra0 .repo {background: #262626}
+      .darcsChanges .zebra1 {background: #171717;}
+      .darcsChanges .zebra1 .repo {background: #171717;}
+
+      .darcsChanges .log, .darcsChanges .date {
+	  font-size: 75%;
+      }
+
     </style>
   </head>
   <body>
@@ -174,21 +193,7 @@
 
 	    <div id="recent-checkins" class="panel">
 	      <h3>Recent code changes</h3>
-	      <div>but not really, just a mockup</div>
-	      <table>
-		<tr><th></th><th>Project</th><th>Notes</th></tr>
-		<tr><td class="tm">5 days ago</td><td><a href="">freeway</a></td>
-		<td>don't stop if the 5min file is missing or if a fetch fails </td></tr>
-		<tr><td class="tm">2 weeks ago</td><td><a href="">freeway</a></td>
-		<td>display tweaks </td></tr>
-		<tr><td class="tm">2 weeks ago</td><td><a href="">freeway</a></td>
-		<td>web server now requests new ftp of data at 5min interval ...</td></tr>
-		<tr><td class="tm">3 weeks ago</td><td><a href="">freeway</a></td>
-		<td>nevow web server </td></tr>
-		<tr><td class="tm">3 weeks ago</td><td><a href="">freeway</a></td>
-		<td>new table report </td></tr>
-		<tr><td colspan="3">...</td></tr>
-	      </table>
+
 	    </div>
 
 	    <div id="projects" class="panel">
@@ -218,32 +223,32 @@
 		<div><a href="/projects/skim"><img src="../thumbs/skim.png"/>skim text file reader</a></div>
 		<div><a href="/projects/toilet"><img src="../thumbs/toilet.png"/>Toilet project</a></div>
 		<div><a href="/projects/water"><img src="../thumbs/water.png"/>Water splashing</a></div>
-		<div>
-		  More:
-		  <div><a href="/projects/blip">blip - interactive batch image processor</a></div>
-		  <div><a href="/projects/countpara">countpara</a></div>
-		  <div><a href="/projects/fid">Fiddler on the Roof lighting project</a></div>
-		  <div><a href="/projects/gasuse">gasuse</a></div>
-		  <div><a href="/projects/gis">gis</a></div>
-		  <div><a href="/projects/grepedit">grepedit</a></div>
-		  <div><a href="/projects/micpower">Microphone power supply</a></div>
-		  <div><a href="/projects/pedals">Serial foot pedals</a></div>
-		  <div><a href="/projects/pyrexdemo">Pyrex demo for baypiggies</a></div>
-		  <div><a href="/projects/sleepingdog">Sleeping Dog short film</a></div>
-		  <div><a href="/projects/straighten">image straightening</a></div>
-		  <div><a href="/projects/summermovies">summermovies</a></div>
-		  <div><a href="/projects/webcam">webcam</a></div>
-		  <div><a href="/projects/zaurus">Zaurus</a></div>
-		</div>
-		<div>
-		  Wikis: 
-		  <a href="/wikis/annocan">Annotated canvas widget</a>; 
-		  <a href="/wikis/essays">Essays</a>; 
-		  <a href="/wikis/hiss">Hiss - </a>; 
-		  <a href="/wikis/machine">My workstation</a>; 
-		  <a href="/wikis/pixel">RGB led remote pixel</a>; 
-		  <a href="/wikis/editor">Video editor</a>
-		</div>
+	      </div>
+	      <div class="column3">
+		More:
+		<div><a href="/projects/blip">blip - interactive batch image processor</a></div>
+		<div><a href="/projects/countpara">countpara</a></div>
+		<div><a href="/projects/fid">Fiddler on the Roof lighting project</a></div>
+		<div><a href="/projects/gasuse">gasuse</a></div>
+		<div><a href="/projects/gis">gis</a></div>
+		<div><a href="/projects/grepedit">grepedit</a></div>
+		<div><a href="/projects/micpower">Microphone power supply</a></div>
+		<div><a href="/projects/pedals">Serial foot pedals</a></div>
+		<div><a href="/projects/pyrexdemo">Pyrex demo for baypiggies</a></div>
+		<div><a href="/projects/sleepingdog">Sleeping Dog short film</a></div>
+		<div><a href="/projects/straighten">image straightening</a></div>
+		<div><a href="/projects/summermovies">summermovies</a></div>
+		<div><a href="/projects/webcam">webcam</a></div>
+		<div><a href="/projects/zaurus">Zaurus</a></div>
+	      </div>
+	      <div>
+		Wikis: 
+		<a href="/wikis/annocan">Annotated canvas widget</a>; 
+		<a href="/wikis/essays">Essays</a>; 
+		<a href="/wikis/hiss">Hiss - </a>; 
+		<a href="/wikis/machine">My workstation</a>; 
+		<a href="/wikis/pixel">RGB led remote pixel</a>; 
+		<a href="/wikis/editor">Video editor</a>
 	      </div>
 	    </div>
 
@@ -267,7 +272,7 @@
 	    </div>
 
 	    <div class="panel" id="ast-delicious-tags">
-	      <h3>My <a href="http://delicious.com/drewpca">delicious</a> tags</h3>
+	      <h3>My <a href="http://delicious.com/drewpca">most delicious tags</a></h3>
 	      <script type="text/javascript" src="http://feeds.delicious.com/v1/js/tags/drewpca?count=51;size=10-18;color=87ceeb-0000ff;title=my%20del.icio.us%20tags"></script>
 	    </div>
 
@@ -287,6 +292,14 @@
     <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
 
     <script type="text/javascript">
+
+
+      new Ajax.Request("http://bigasterisk.com/darcstable.html", 
+		       {method: 'get', 
+			onSuccess: function(transport) { 
+			    Element.insert($('recent-checkins'), transport.responseText); 
+			}});
+
       new Ajax.Request("http://bigasterisk.com/proxy/identica/json",
 		       {method: 'get',
 			evalJSON: 'force',

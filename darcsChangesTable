@@ -1,0 +1,79 @@
+#!/usr/bin/python
+"""
+read multiple atom feeds written by darcsatom, sort them together,
+render a pretty html table of the recent changes
+
+related tools:
+  http://offog.org/darcs/misccode/darcsatom
+  http://offog.org/darcs/misccode/darcsatom.xslt
+  http://offog.org/code/rawdog.html
+
+"""
+import sys, datetime
+from lxml.etree import fromstring
+sys.path.append('/usr/lib/python%s/site-packages/oldxml' % sys.version[:3])
+from xml.utils import iso8601
+from nevow import flat, tags as T
+
+ATOM = '{http://www.w3.org/2005/Atom}'
+DARCSATOM = '{http://bigasterisk.com/v1/darcsAtom}'
+
+def isoDate(secs):
+    return datetime.datetime.fromtimestamp(secs).date().isoformat()
+
+def atomEntries(filenames):
+    """all entries from all atom files. Each one is returned as
+       (secs, repo, entryEtree)"""    
+    entries = []
+    for filename in filenames:
+        feed = fromstring(open(filename).read())
+        for entry in feed.findall(ATOM + 'entry'):
+            repo = entry.find(DARCSATOM + 'repoName').text
+            entries.append((iso8601.parse(entry.find(ATOM + 'updated').text), repo, entry))
+    return entries
+
+def formatTable(entries,
+                maxRows=15,
+                repoUrlFormat="http://bigasterisk.com/darcs/?r=%s",
+                patchBrowseUrlFormat="http://bigasterisk.com/darcs/?r=%(repo)s;a=commitdiff;h=%(patchHash)s",
+                ):
+    """a nevow stan table showing all the darcs patches"""
+    seenRepos = set()
+    lastRepo = None
+    rows = [T.tr[T.th['Repo'], T.th['Date'], T.th['Patch name']]]
+    zebra = 0
+    for i, (t, repo, entry) in enumerate(entries[:maxRows]):
+        if repo != lastRepo:
+            rowSpan = 1
+            for nextEntry in entries[i + 1:]:
+                if nextEntry[1] == repo:
+                    rowSpan += 1
+                else:
+                    break
+            content = T.a(href=repoUrlFormat % repo)[repo]
+            repoCell = T.td(rowspan=rowSpan, class_="repo")[content]
+            zebra = 1 - zebra
+        else:
+            repoCell = ""
+
+        patchHash = entry.find(DARCSATOM + 'patchHash').text
+        link = patchBrowseUrlFormat % dict(repo=repo, patchHash=patchHash)
+        log = entry.find(ATOM + 'title').text
+
+        rows.append(T.tr(class_="zebra%s" % zebra)[
+            repoCell,
+            T.td(class_="date")[T.a(href=link)[isoDate(t)]],
+            T.td(class_="log")[T.a(href=link)[log]]])
+
+        seenRepos.add(repo)
+        lastRepo = repo
+    return T.table(class_="darcsChanges")[rows]
+
+
+entries = atomEntries(sys.argv[1:])
+entries.sort(reverse=True)
+
+# here, we could make and save a combined atom feed of everything, and
+# use patchhash to make the browsable links nicer
+
+print flat.flatten(formatTable(entries))
