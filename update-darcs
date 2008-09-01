@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# needs xsltproc, nevow, lxml, pyxml
+
+cd /my/site/homepage
+./darcsatom
+./darcsChangesTable -o ./atom.out/allProjects.xml -t ./www/darcstable.html ./darcsatom.out/*
