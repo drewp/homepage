@@ -23,6 +23,14 @@
       a:hover {
 	  text-decoration: underline;
       }
+      img.atom {
+        width: 26px;
+	height: 26px;
+	float: right;
+	position: relative;
+	top: -4px;
+	border: 0;
+      }
       h3, .recentReviews th.title {
 	  background:#1F7946 none repeat scroll 0 0;
 	  font-size:120%;
@@ -192,7 +200,8 @@
 	  <div id="projects-half">
 
 	    <div id="recent-checkins" class="panel">
-	      <h3>Recent code changes</h3>
+	      <h3><a href="http://bigasterisk.com/darcs/atom"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
+	      Recent code changes</h3>
 
 	    </div>
 
@@ -264,20 +273,23 @@
 	    <div id="foaf">
 	      <h3><a href="">FOAF</a> connections</h3>
 	      <div>Spouse: <a href="http://kelsi.quickwitretort.com/">Kelsi Perttula</a></div>      
+	      <!-- TODO: derive this section from my actual foaf file -->
 	    </div>
 
 	    <div id="identica">
-	      <h3>My <a href="http://identi.ca/drewp">identi.ca</a> feed</h3>
-	    
+	      <h3><a href="http://identi.ca/drewp/rss"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
+	      My <a href="http://identi.ca/drewp">identi.ca</a> feed</h3>
 	    </div>
 
 	    <div class="panel" id="ast-delicious-tags">
-	      <h3>My <a href="http://delicious.com/drewpca">most delicious tags</a></h3>
+	      <h3><a href="http://feeds.delicious.com/v2/rss/drewpca"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
+	      My <a href="http://delicious.com/drewpca">most delicious tags</a></h3>
 	      <script type="text/javascript" src="http://feeds.delicious.com/v1/js/tags/drewpca?count=51;size=10-18;color=87ceeb-0000ff;title=my%20del.icio.us%20tags"></script>
 	    </div>
 
 	    <div id="recent-reviews" class="panel">
 	      <div id="recent-reviews-filler">filler</div>
+	      <a id="reviews-rss" href="http://revyu.com/latest/rss/people/drewp"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
 	    </div>
 
 	    <div id="recommendations" class="panel">
@@ -334,6 +346,8 @@
 		       {method: 'get', 
 			onSuccess: function(transport) { 
 			    Element.replace($('recent-reviews-filler'), transport.responseText); 
+			    var td = $('recent-reviews').firstDescendant().firstDescendant().firstDescendant().firstDescendant();
+			    Element.insert(td, {top: Element.remove($('reviews-rss'))});
 			}});
 
       new Ajax.Request("http://bigasterisk.com/recentPostFiles/", 

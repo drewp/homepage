@@ -10,13 +10,27 @@ related tools:
 
 """
 import sys, datetime
-from lxml.etree import fromstring
+from optparse import OptionParser
+from lxml.etree import fromstring, tostring
+from lxml.builder import ElementMaker
 sys.path.append('/usr/lib/python%s/site-packages/oldxml' % sys.version[:3])
 from xml.utils import iso8601
 from nevow import flat, tags as T
 
 ATOM = '{http://www.w3.org/2005/Atom}'
 DARCSATOM = '{http://bigasterisk.com/v1/darcsAtom}'
+A = ElementMaker(namespace="http://www.w3.org/2005/Atom",
+                 nsmap={None : "http://www.w3.org/2005/Atom",
+                        'ast' : 'http://bigasterisk.com/v1/darcsAtom'})
+
+class ProjEntry(object):
+    def __init__(self, node):
+        self.node = node
+        self.repo = node.find(DARCSATOM + 'repoName').text
+        self.updated = iso8601.parse(node.find(ATOM + 'updated').text)
+
+    def __cmp__(self, other):
+        return cmp(self.updated, other.updated)
 
 def isoDate(secs):
     return datetime.datetime.fromtimestamp(secs).date().isoformat()
@@ -28,52 +42,84 @@ def atomEntries(filenames):
     for filename in filenames:
         feed = fromstring(open(filename).read())
         for entry in feed.findall(ATOM + 'entry'):
-            repo = entry.find(DARCSATOM + 'repoName').text
-            entries.append((iso8601.parse(entry.find(ATOM + 'updated').text), repo, entry))
+            entries.append(ProjEntry(entry))
     return entries
 
 def formatTable(entries,
                 maxRows=15,
-                repoUrlFormat="http://bigasterisk.com/darcs/?r=%s",
-                patchBrowseUrlFormat="http://bigasterisk.com/darcs/?r=%(repo)s;a=commitdiff;h=%(patchHash)s",
                 ):
     """a nevow stan table showing all the darcs patches"""
     seenRepos = set()
     lastRepo = None
     rows = [T.tr[T.th['Repo'], T.th['Date'], T.th['Patch name']]]
     zebra = 0
-    for i, (t, repo, entry) in enumerate(entries[:maxRows]):
-        if repo != lastRepo:
+    for i, entry in enumerate(entries[:maxRows]):
+        
+        if entry.repo != lastRepo:
             rowSpan = 1
             for nextEntry in entries[i + 1:]:
-                if nextEntry[1] == repo:
+                if nextEntry.repo == entry.repo:
                     rowSpan += 1
                 else:
                     break
-            content = T.a(href=repoUrlFormat % repo)[repo]
+            content = T.a(href=darcsWebRepoLink(entry.repo))[entry.repo]
             repoCell = T.td(rowspan=rowSpan, class_="repo")[content]
             zebra = 1 - zebra
         else:
             repoCell = ""
 
-        patchHash = entry.find(DARCSATOM + 'patchHash').text
-        link = patchBrowseUrlFormat % dict(repo=repo, patchHash=patchHash)
-        log = entry.find(ATOM + 'title').text
+        patchHash = entry.node.find(DARCSATOM + 'patchHash').text
+        link = darcsWebLink(entry.repo, patchHash)
+        log = entry.node.find(ATOM + 'title').text
 
         rows.append(T.tr(class_="zebra%s" % zebra)[
             repoCell,
-            T.td(class_="date")[T.a(href=link)[isoDate(t)]],
+            T.td(class_="date")[isoDate(entry.updated)],
             T.td(class_="log")[T.a(href=link)[log]]])
 
-        seenRepos.add(repo)
-        lastRepo = repo
+        seenRepos.add(entry.repo)
+        lastRepo = entry.repo
     return T.table(class_="darcsChanges")[rows]
 
+def darcsWebRepoLink(repo):
+    return "http://bigasterisk.com/darcs/?r=%s" % repo
 
-entries = atomEntries(sys.argv[1:])
+def darcsWebLink(repo, darcsHash):
+    return "http://bigasterisk.com/darcs/?r=%(repo)s;a=commitdiff;h=%(darcsHash)s" % vars()
+
+def linkEntry(entry):
+    repo = entry.find(DARCSATOM + 'repoName').text
+    hash = entry.find(DARCSATOM + 'patchHash').text
+    entry.replace(entry.find(ATOM+'link'), A.link(href=darcsWebLink(repo, hash), rel="alternate"))
+    return entry
+
+def makeFeed(entries):
+    
+    return A.feed(A.generator("darcsChangesTable",
+                              uri="http://bigasterisk.com/darcs/?r=homepage;a=headblob;f=/darcsChangesTable"),
+                  A.id("http://bigasterisk.com/darcs/atom"),
+                  A.link("http://bigasterisk.com/darcs/atom", rel="self"),
+                  A.title("Darcs changes for all repositories on bigasterisk.com"),
+                  A.updated(datetime.datetime.utcnow().isoformat()+"Z"),
+                  *[linkEntry(e.node) for e in entries]
+                  )
+
+
+
+parser = OptionParser()
+parser.add_option('-t', help='output HTML table')
+parser.add_option('-o', help='output ATOM feed')
+opts, args = parser.parse_args()
+
+entries = atomEntries(args)
 entries.sort(reverse=True)
 
-# here, we could make and save a combined atom feed of everything, and
-# use patchhash to make the browsable links nicer
+if opts.o:
+    f = open(opts.o, "w")
+    f.write(tostring(makeFeed(entries), pretty_print=True))
+    f.close()
 
-print flat.flatten(formatTable(entries))
+if opts.t:
+    f = open(opts.t, "w")
+    f.write(flat.flatten(formatTable(entries)))
+    f.close()
