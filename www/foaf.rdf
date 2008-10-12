@@ -69,6 +69,7 @@
         <long>-122.27603</long>
     </Point>
  </based_near>
+ <foaf:based_near rdf:resource="http://sws.geonames.org/5404335/"/>
 
 </foaf:Person>
 
