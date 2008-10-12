@@ -53,6 +53,13 @@
    <rdfs:seeAlso rdf:resource="http://collectivesource.com/foaf.rdf"/>
   </foaf:Person>
  </foaf:knows>
+ <foaf:knows>
+  <foaf:Person rdf:about="http://bblfish.net/people/henry/card#me">
+   <foaf:name>Henry Story</foaf:name>
+   <rdfs:seeAlso rdf:resource="http://bblfish.net/people/henry/card"/>
+  </foaf:Person>
+ </foaf:knows>
+
 
 
  <redfoot:hexdigest>a58baff6ce11790bea51287049899088</redfoot:hexdigest>
