@@ -101,7 +101,7 @@ def makeFeed(entries):
                   A.link("http://bigasterisk.com/darcs/atom", rel="self"),
                   A.title("Darcs changes for all repositories on bigasterisk.com"),
                   A.updated(datetime.datetime.utcnow().isoformat()+"Z"),
-                  *[linkEntry(e.node) for e in entries]
+                  *[linkEntry(e.node) for e in entries[:50]]
                   )
 
 
