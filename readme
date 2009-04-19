@@ -29,3 +29,10 @@ house bw
 exchangemeeting
 all my services.html links
 
+
+=======================
+
+if you ever decide to include the dynamic stuff right in the page that gets
+sent (for speed), make sure no one can put an openid link in there! or else 
+they'll be able to authenticate as http://bigasterisk.com/ and get into my stuff
+
