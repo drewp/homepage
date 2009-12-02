@@ -16,7 +16,7 @@
 	background: #111;
 	color: white;
 	margin: 0;
-	xfont-family:arial,sans-serif;
+	font-family:arial,sans-serif;
       }
       a {
 	  color: #aaf;
@@ -79,6 +79,7 @@
       }
       .column2 {
 	  -moz-column-count: 2;
+	  -webkit-column-count: 2;
       }
       .delicious-tags h2 { 
 	  margin: 0; 
@@ -147,6 +148,7 @@
 	margin: 0 0 0 2em;
 	padding:0;
 	-moz-column-count: 3;
+	-webkit-column-count: 3;
       }
       #recommendations ul li {
 	  list-style: square;
@@ -180,6 +182,9 @@
 
       .darcsChanges .log, .darcsChanges .date {
 	  font-size: 75%;
+      }
+      .date  {
+	  white-space: nowrap;
       }
 
     </style>
@@ -309,43 +314,37 @@
     <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
 
     <script type="text/javascript">
-
-
+      // <![CDATA[
       new Ajax.Request("http://bigasterisk.com/darcstable.html", 
 		       {method: 'get', 
 			onSuccess: function(transport) { 
 			    Element.insert($('recent-checkins'), transport.responseText); 
 			}});
 
-      new Ajax.Request("http://bigasterisk.com/proxy/identica/json",
-		       {method: 'get',
-			evalJSON: 'force',
-			onSuccess:function(transport) {
-			    var now = new Date().valueOf();
-			    var msgs = new Element('dl');
-			    transport.responseJSON.value.items.each(function(update) {
-				var message = update.title.replace(/^drewp: /, '');
-				
-				var posted = update['y:published'].utime * 1000;
-				
-				var displayDate;
-				if (posted < now - 86400000) {
-				    displayDate = new Date(posted).toJSON().replace(/\"?(.*)T.*/, "$1");
-				} else {
-				    var mins = (now - posted) / 1000 / 60;
-				    if (mins < 60) {
-					displayDate = Math.ceil(mins) + " minutes ago";
-				    } else {
-					displayDate = Math.ceil(mins / 60) + " hours ago";
-				    }
-				}
-				Element.insert(msgs, new Element('dt').update(new Element('a', {href: update.link}).update(message)));
-				Element.insert(msgs, new Element('dd').update("posted "+displayDate));
-      
-			    });
-			    Element.insert($('identica'), msgs);
-			}});
-
+      function renderIdentica(result) {
+	  var now = new Date().valueOf();
+	  var msgs = new Element('dl');
+	  result.value.items.each(function(update) {
+	      var message = update.title.replace(/^drewp: /, '');
+	      
+	      var posted = update['y:published'].utime * 1000;
+	      
+	      var displayDate;
+	      if (posted < now - 86400000) {
+		  displayDate = new Date(posted).toJSON().replace(/\"?(.*)T.*/, "$1");
+	      } else {
+		  var mins = (now - posted) / 1000 / 60;
+		  if (mins < 60) {
+		      displayDate = Math.ceil(mins) + " minutes ago";
+		  } else {
+		      displayDate = Math.ceil(mins / 60) + " hours ago";
+		  }
+	      }
+	      Element.insert(msgs, new Element('dt').update(new Element('a', {href: update.link}).update(message))); 
+	      Element.insert(msgs, new Element('dd').update("posted "+displayDate));
+	  });
+	  Element.insert($('identica'), msgs);
+      }
 
       new Ajax.Request("http://bigasterisk.com/recentReviews/", 
 		       {method: 'get', 
@@ -361,30 +360,27 @@
 			    Element.insert($('posted'), transport.responseText); 
 			}});
 
-      var sections = [
-	  {id:'recommended-extension', 'title':'Firefox extensions', 'tags' : 'firefox+extension+recommended'},
-	  {id:'recommended-webapp', 'title':'Web apps', 'tags' : 'webapp+recommended'},
-	  {id:'recommended-tool', 'title':'Software tools', 'tags' : 'tool+recommended'},
-      ];
-      
-      sections.each(function(section) {
-	  var elem = new Element('div', {'id' : section.id}).update(section.title);
+      function del1(result) { deliciousSection('recommended-extension', 'Firefox extensions', result); }
+      function del2(result) { deliciousSection('recommended-webapp', 'Web apps', result); }
+      function del3(result) { deliciousSection('recommended-tool', 'Software tools', result); }
+
+      function deliciousSection(id, title, result) {
+	  var elem = new Element('div', {'id' : id}).update(title);
 	  
 	  var ul = new Element('ul');
 	  Element.insert(elem, ul);
 	  Element.insert($('recommendations'), elem);
 	  
-	  var r = new Ajax.Request("http://bigasterisk.com/proxy/delicious/v2/json/drewpca/" + section.tags,
-	      {method: 'get',
-	      evalJSON: 'force',
-	      onSuccess:function(transport) {
-		  transport.responseJSON.each(function(post) { 
-		      Element.insert(ul, new Element('li').update(new Element('a', {'href' : post.u}).update(post.d)));
-		  });
-	      }});
-      });
+	  result.each(function(post) { 
+	      Element.insert(ul, new Element('li').update(new Element('a', {'href' : post.u}).update(post.d)));
+	  });
+      }
+      // ]]>
     </script>
-
+    <script src="http://pipes.yahoo.com/pipes/pipe.run?_id=cNJ_Fyhc3RGC4DSc6icw5g&amp;_render=json&amp;_callback=renderIdentica"></script>
+    <script src="http://feeds.delicious.com/v2/json/drewpca/firefox+extension+recommended?callback=del1"></script>
+    <script src="http://feeds.delicious.com/v2/json/drewpca/webapp+recommended?callback=del2"></script>
+    <script src="http://feeds.delicious.com/v2/json/drewpca/tool+recommended?callback=del3"></script>
 
   </body>
 </html>
