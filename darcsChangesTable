@@ -98,7 +98,7 @@ def makeFeed(entries):
     return A.feed(A.generator("darcsChangesTable",
                               uri="http://bigasterisk.com/darcs/?r=homepage;a=headblob;f=/darcsChangesTable"),
                   A.id("http://bigasterisk.com/darcs/atom"),
-                  A.link("http://bigasterisk.com/darcs/atom", rel="self"),
+                  A.link(href="http://bigasterisk.com/darcs/atom", rel="self"),
                   A.title("Darcs changes for all repositories on bigasterisk.com"),
                   A.updated(datetime.datetime.utcnow().isoformat()+"Z"),
                   *[linkEntry(e.node) for e in entries[:50]]
