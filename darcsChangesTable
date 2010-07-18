@@ -1,4 +1,4 @@
-#!/usr/bin/python2.5
+#!/usr/bin/python
 """
 read multiple atom feeds written by darcsatom, sort them together,
 render a pretty html table of the recent changes
@@ -13,9 +13,11 @@ import sys, datetime
 from optparse import OptionParser
 from lxml.etree import fromstring, tostring
 from lxml.builder import ElementMaker
-sys.path.append('/usr/lib/python%s/site-packages/oldxml' % sys.version[:3])
 from xml.utils import iso8601
+import warnings
+warnings.filterwarnings('ignore', category=DeprecationWarning)
 from nevow import flat, tags as T
+warnings.resetwarnings()
 
 ATOM = '{http://www.w3.org/2005/Atom}'
 DARCSATOM = '{http://bigasterisk.com/v1/darcsAtom}'
