@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Light dimmer project</title>
+    <!--# include file="/automation/head2.xhtml" -->
+  </head>
+  <body>
+    <!--# include file="/automation/body1.xhtml" -->
+
+    <div id="page">
+      <div id="page-bgtop">
+	<div id="content">
+
+<img src="http://bigasterisk.com/projects/automation/volumeandpager/desk1" alt="" title="" height="400" width="600" /><br>
+
+Half the desk. See the three red lights in the shelf? The bottom one
+is the pager. The upper monitor is for <a href=/machine>my other
+workstation</a>. It shows logs and other things I always want
+visible. The monitor to the right displays video.
+
+<p>
+<a name="pager"></a>
+<img src="http://bigasterisk.com/projects/automation/volumeandpager/desk2" alt="" title="" height="267" width="400" /><br>
+
+This is the box that the bottom red LED is on. It's a hand-made panel with 8 buttons
+which are encoded to 4 wires with a poor man's multiplexer circuit (a
+bunch of diodes). Pressing a button will change the signals on the
+wires. That signal is read many times a second by the K8000 board (see
+below). The reader software notices a request on those inputs and
+opens a socket to my main workstation. There, an <a href=RealPager>fvwm2 plugin</a> 
+answers and listens for the desktop number to switch to. I also have
+Ctrl-Shift-arrow mapped to change desktops, so I use that a lot since
+it's closer (and available on the machine at work too).
+
+<p>
+<img src="http://bigasterisk.com/projects/automation/volumeandpager/desk3" alt="" title="" height="480" width="720" /><br>
+
+This is a farther and higher view than the previous picture's. You can
+see the whole <a href=http://www.velleman.be/kits/k8000.htm>K8000
+board</a> here, along with two little experimenter boards that contain
+additional control circuits. Part of the board is obscured by waxed
+paper on plexiglass.  There's a hole in the shelf for a cable to go
+through, and I'm able to get a pinhole camera projection of the front
+yard through the hole. There's also a telephone punch block visible in 
+all these pictures. When I had even more lighting and sound control wired
+up (in previous residences), I used that to organize the cables running
+everywhere.
+<p>
+There's one more active circuit, which you can hardly see. At the far
+right, against the monitor, there's a voltage divider that scales down
+the level on my telephone pair. That's fed to one of the optoisolators
+on the K8000 (in fact, it's why there's a red light on in the middle
+of the K8000 board). When I pick up the phone, that LED turns off and
+the polling computer notices that the phone is off-hook. Via some tiny
+<a href=volume.py>client</a> / <a href=volumeserver.py>server</a>
+python programs, the polling computer is able to fade down the music
+on the music-playing computer when I pick up my phone. Phone rings are
+also trackable.
+
+<p>
+	</div>
+	<!--# include file="/automation/sidebar.xhtml" -->	
+      </div>
+    </div>
+    <!--# include file="/automation/body2.xhtml" -->
+  </body>
+</html>

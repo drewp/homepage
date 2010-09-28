@@ -1,0 +1,32 @@
+pre {background: #e0ffff}
+
+
+table.recentReviews {
+  border: 2px solid black;
+  font-size: 9pt;
+  font-family: sans-serif;
+  border-collapse: collapse;
+}
+
+.recentReviews td {
+  border: 1px solid #aaaaaa;
+  padding: 1px 9px 1px 9px;
+}
+
+.recentReviews th {
+  background: ;
+}
+
+.recentReviews .title {
+  background: #5790CB;
+  color: white;
+}
+
+a.recentReviews:link, a.recentReviews:visited {
+  color: #B1D1F1; 
+  font-weight: bold;
+}
+
+a.recentReviews:active {
+  color: red;
+}

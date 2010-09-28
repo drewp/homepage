@@ -1,0 +1,164 @@
+#!/usr/bin/env python
+
+"""
+interface module for the Panasonic ZE-84TWM1FD barcode scanner,
+available as part number BCS-84 from All Electronics at
+http://www.allelectronics.com/
+
+this is version 1 of this module.
+
+Written by Drew Perttula (drewp@bigasterisk.com) and released under
+the GPL, available here: http://www.gnu.org/licenses/gpl.txt
+
+"""
+
+
+import socket,time,math
+
+assert isinstance(str,type), "you need python 2.2.0 or later to use this module"
+
+try:
+  import serial
+except ImportError:
+  raise ImportError("Unable to find the pyserial module, "
+                    "which is available from http://pyserial.sourceforge.net")
+
+class Scanner:
+    def __init__(self,portnumber=0):
+        """open the given serial port (integer port number, starting
+        with 0) and sets the serial parameters. 
+
+        DIP switches 5 and 6 are shipped as 'on', which means 8 bit
+        data, no parity. DIP switches 7 and 8 are shipped as 'on' as
+        well, which means 1200 baud communication."""
+        
+        self.handle=serial.Serial(port=portnumber,baudrate=1200,
+                                  bytesize=serial.EIGHTBITS,
+                                  parity=serial.PARITY_NONE,
+                                  stopbits=serial.STOPBITS_ONE)
+
+    def requisition(self):
+        """send the documented 'requisition command', which seems useful as
+        a start signal"""
+        self.handle.write('\x1b\x3f\x0d')
+
+    def beep(self):
+        """send the documented beep command to the scanner"""
+        self.handle.write("\x1b\x54\x0d")
+
+    def disable(self):
+        """send the documented command to turn off the LED and disable
+        scanning"""
+        # untested
+        self.handle.write("\x1b\x46\x0d")
+
+    def blink(self): 
+        """send the documented command to blink the LED and enable
+        scanning"""
+        # untested
+        self.handle.write("\x1b\x42\x0d")
+
+    def keepon(self):
+        """send the documented command to keep the LED on and enable
+        scanning"""
+        # untested
+        self.handle.write("\x1b\x4e\x0d")
+
+    def readmessage(self):
+        """read a null-terminated message from the scanner.
+
+        The message is returned as a string with additional methods to
+        render the string in various formats. See the 'message' class
+        within this method for the possible formats.
+
+        Zero-length reads are handled by restarting the scanner with a
+        call to requisition(), which seems to be working.
+
+        """
+
+        f=self.handle
+        while 1:
+            # build a null-terminated message in the string called 'buf'
+
+            c=f.read(1)
+            if len(c)!=1: # we get occas len 0, which we'll skip
+                print "zero length read"
+                time.sleep(1)
+                # send another stsartup
+                self.requisition()
+                continue
+
+            buf=c
+            while c!="\x00":
+                buf+=c
+                c=f.read(1)
+
+            # now we return the message as a special string (see the
+            # docstring in the class below)
+
+            class message(str):
+               """a special string that can convert to some useful
+               representations.  Call one of the "as..."
+               methods on the instance to get a different
+               representation (as a string). The str and repr of this
+               string will return the original binary message string."""
+               def ashex(self):
+                   """returns the value in a form like 'bfbf7d39'"""
+                   return "".join([hex(ord(b))[2:] for b in self])
+               def asbinary(self):
+                   """returns the value in a form like '10010101,01001000,11010100,00101011'"""
+                   ret=""
+                   for byte in self:
+                     for x in range(7, -1, -1):
+                        ret+=str(bool(ord(byte) & (1L<< x)))
+                     ret+=","
+                   return ret[:-1] # drop last comma
+#               def asbarcode(self):
+#                   """returns the value as the number in the barcode"""
+#                   ret=""
+#                   for byte in self:
+#                      pass
+               def asdecimal(self):
+                   """returns the value in a form like '27 125 46 24'"""
+                   return " ".join(map(str,map(ord,self)))
+
+               # this sets the str and repr to return the binary
+               # message string exactly.
+
+               __repr__=__str__=lambda self: self
+
+            return message(buf)
+
+    def __str__(self):
+        """returns very simple description of the scanner object"""
+        return "scanner at "+`self.handle`
+
+
+
+if __name__=='__main__':
+
+  # simple main program to read barcodes, attempt to send them to
+  # another server, and beep. this is actually the entire
+  # scanner-reading program which i use for
+  # http://bigasterisk.com/automation/door (the server program does
+  # the validation and opens the door)
+  
+  scan=Scanner()
+  scan.requisition()
+
+  while 1:
+    buf=scan.readmessage()
+  
+    print "message",buf.ashex()
+  
+    try:
+      sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      sock.connect(("dot", socket.getservbyname('barcode','tcp')))
+      sock.send(buf.ashex()+"\n")
+      sock.close()
+    except Exception,e:
+      print "failed to send to dot: %s" % e
+
+    scan.beep()
+
+

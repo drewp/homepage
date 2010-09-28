@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+
+# this is a fvwm module that watches a tcp port named 'pager' and
+# if it gets a connection, and the client sends "digits_space_digits",
+# it hangs up on the client and does a fvwm "GotoPage x y" where x
+# and y are the numbers sent by the client
+
+# there is no security, anyone, anywhere, with the right port number can
+# change your current page
+
+
+# I copied and translated SendInfo from the fvwm 1.24 library call.
+
+sub SendInfo # expects file OUT to be opened
+{
+  my $message = shift;
+
+  syswrite(OUT,"\0\0\0\0",4);
+
+  $len = length($message);
+  
+  #write(fd[0],&w,sizeof(int));
+  syswrite(OUT,pack("i",$len),4);
+  #write(fd[0],message,w);
+  syswrite(OUT,$message,$len);
+  
+  #/* keep going */
+  #w=1;
+  #write(fd[0],&w,sizeof(int));
+  syswrite(OUT,"\1\0\0\0",4);
+}
+
+$fd = $ARGV[0];
+open(OUT,">&$fd") || die("realpager: can't open fd $fd");
+
+use IO::Socket;
+$port = getservbyname('pager','tcp');
+$server = IO::Socket::INET->new( Proto => 'tcp',
+				 LocalPort => $port,
+				 Listen => SOMAXCONN,
+				 Reuse => 1);
+die "can't setup server" unless $server;
+while($client=$server->accept()) {
+  $cmd = <$client>;
+  if ($cmd =~ /\d+ \d+/) {
+    SendInfo "GotoPage $cmd\n";
+  } else {
+    print STDERR "realpager received bad command $cmd\n";
+  }
+  close $client;
+}
+close OUT;
+

@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Front door</title>
+    <!--# include file="/automation/head2.xhtml" -->
+  </head>
+  <body>
+    <!--# include file="/automation/body1.xhtml" -->
+
+    <div id="page">
+      <div id="page-bgtop">
+	<div id="content">
+
+
+This page was featured on slashdot on 2002/1/11. <a href=slashdot>Here's how that went.</a> You're all still welcome to
+email me at drewp@bigasterisk.com with your stories, ideas, and
+comments, though.
+<p>
+
+<img src="frontofhouse.jpg" alt="" height="480" width="720" border="0" />
+<br>
+The front of the house. The windows on the left are to my room.
+<p>
+<img src="blinkingreader.gif" alt="" height="453" width="454" border="0" />
+<br>
+
+In my window sits a cheap <a href="http://www.allelectronics.com/cgi-bin/category.cgi?category=search&item=BCS-84&type=store">barcode
+reader</a>. It's powered by a computer power supply I ripped from an
+old computer.
+<p>
+
+<img src="doscan.jpg" alt="" height="433" width="506" border="0" />
+
+<br>
+Anyone who wants to get into the house can scan a barcode that they
+carry. A video store gave me a little keychain barcode which I'm using
+here. The scanner has a CCD; I don't have to slide the barcode. The
+scanner actually has a beeper that I can control from the
+computer. You can hear it beep from outside the window.
+<p>
+
+<img src="barcodeinterface.jpg" alt="" height="344" width="463" border="0" />
+<br>
+
+Here's the <a href=http://www.kmitl.ac.th/~kswichit/MAX232/MAX232.htm>driver circuit</a> I slapped together for the barcode
+reader. It's just a MAX232 chip that converts CMOS/TTL levels to the
+RS232 spec. The output connects to the serial port of one of my Linux
+boxes. That box runs a trivial python program to read a packet from
+the serial port and send it via TCP/IP to another computer in the
+house. The scanner interface program is now available <a href=barcodepoller>here</a>, and it 
+now uses the <a href=http://pyserial.sourceforge.net>pyserial</a> module so it might run on
+mswindows too.
+<p>
+
+<img src="k8000closeup.jpg" alt="" height="427" width="640" border="0" />
+<br>
+The receiving computer is connected to this <a href=http://www.velleman.be/kits/k8000.htm>K8000 experimenter
+board</a>. I2C chips on this board . If your barcode was on the list
+of allowed keys, I raise output 7 on this board for 6 seconds. Input 6
+(the right-hand illuminated LED) shows that the door was closed when I
+took this picture. See below for how I sense if the door is opened or
+not.
+<p>
+
+<img src="logview.jpg" alt="logview.jpg" height="199" width="638" border="0" />
+<br>
+Some successful reads.
+<p>
+
+<img src="strikedriver.jpg" alt="" height="409" width="520" border="0" />
+<br>
+When the K8000 board raises the right output signal, this driver
+circuit sends 24VDC to the <a
+href=http://www.adamsrite.com/media/pdf/es7140.pdf>door strike</a>,
+shown below.
+<p>
+
+<img src="strike.jpg" alt="" height="316" width="450" border="0" />
+<br>
+In this electric strike is a solenoid that relaxes the part of the
+strike that was holding the door closed. The door still functions as
+it did before, but now I have an additional way to allow the door to
+open.
+<p>
+
+<img src="doorsense.jpg" alt="" height="317" width="479" border="0" />
+<br>
+This is the top of the door frame, where I have wedged a <a href="http://www.allelectronics.com/cgi-bin/category.cgi?category=search&item=
+RSW-24&type=store">reed
+switch</a> into the wood. There's a magnet on top of the door that
+closes the switch when the door is closed (hence the turned-on LED in
+the picture above).
+<p>
+
+<img src="doorsenseclose.jpg" alt="" height="441" width="634" border="0" />
+<br>
+Closeup of the reed switch in the wood.
+<p>
+	</div>
+	<!--# include file="/automation/sidebar.xhtml" -->	
+      </div>
+    </div>
+    <!--# include file="/automation/body2.xhtml" -->
+  </body>
+</html>
+
+
