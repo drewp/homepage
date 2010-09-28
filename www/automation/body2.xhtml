@@ -1,0 +1,32 @@
+<div id="footer">
+  <p>Design by <a href="http://www.freecsstemplates.org/">CSS Templates</a>, modified by Drew Perttula under <a href="http://bigasterisk.com/automation/domesticated/license.txt">CC</a>.</p>
+</div>
+<script type="text/javascript"> 
+	  // <![CDATA[
+
+
+function fillDeliciousList(elem, tags, title) {
+    elem.empty();
+    elem.append($("<h3>").text(title.match(/[a-z]/) ? title : ("My "+tags+" links")));
+    var outputList = $("<ul>");
+    elem.append(outputList);
+    elem.append($("<h4>").append($("<a>").attr('href', 'http://www.delicious.com/drewpca/'+tags).text("See this list on delicious.com")));
+    outputList.append("...");
+    $.ajax({
+	url: "http://feeds.delicious.com/v2/json/drewpca/"+tags, 
+        data: {count: 100},
+	dataType: "jsonp",
+	success: function (data, status, xhr) {
+	    outputList.empty();
+	    $.each(data, function(i, post){
+		var link = $("<div>").append($("<a>").attr('href', post.u).text(post.d));
+		var note = $("<div>").addClass("note").text(post.n);
+		outputList.append($("<li>").append(link).append(note));
+            });
+	}
+    })
+}
+$(".deliciousList").each(function (i, elem) { elem = $(elem); fillDeliciousList(elem, elem.attr('tags'), elem.text());  });
+
+	  // ]]>
+	</script> 
