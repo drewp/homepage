@@ -10,7 +10,23 @@
       <div id="page-bgtop">
 	<div id="content">
 
-	  I made this page on 2010-09-26 but I haven't written anything about this project yet.
+<p>I run two <a href="http://en.wikipedia.org/wiki/Linksys_WRT54G_series">WRT54Gs</a> that can take the <a href="http://www.polarcloud.com/tomato">Tomato firmware</a>. Tomato includes a web server with some nice web pages (<a href="http://www.polarcloud.com/img/ssbwm100.png">one screenshot</a>), and they happen to do a lot of their rendering in your browser. This means the pages either contain or fetch more pages containing <a href="http://www.json.org/">JSON</a> data. </p>
+
+<p>To gather the wifi users around my house, therefore, I just do simple web page fetches with <a href="http://github.com/benoitc/restkit">restkit</a> and pull out the JSON. My <a href="http://bigasterisk.com/darcs/?r=entrancemusic;a=headblob;f=/entrancemusic.py">source code is here</a>. It's about 30 lines too long because of the way I share some of my configuration between this system and my web security system. The communication to the routers is in getPresentMacAddrs:</p>
+<pre>
+def getPresentMacAddrs(routers):
+    addrs = [] # (addr, signalStrength, name)
+    macName = {}
+    for router in routers:
+        data = router.get().body
+        for (name, ip, mac, lease) in jsValue(data, 'dhcpd_lease'):
+            macName[mac] = name
+        for _, mac, signal in jsValue(data, 'wldev'):
+            addrs.append((mac, signal, macName.get(mac, None)))
+    return addrs
+</pre>
+
+<p>I stick any changes in who's around in a <a href="http://www.mongodb.org/">mongodb store</a> for display on my web dashboard and for future data mining. I'm not currently using the signal strength numbers, but it would be neat if I had enough APs to estimate where someone was. Changes are also broadcast to an announcement system that plays <a href="../entranceMusic/">entrance music</a> and speaks the device names.</p>
 
 	    <div class="deliciousList" tags="ha+wifi"/>
 	    
