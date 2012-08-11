@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/my/site/homepage/bin/python
 """
 read multiple atom feeds written by darcsatom, sort them together,
 render a pretty html table of the recent changes

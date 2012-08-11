@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!bin/python
 import sys
 from twisted.internet import reactor
 from twisted.python import log
