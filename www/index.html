@@ -296,7 +296,15 @@
 
 	    <div id="identica">
 	      <h3><a href="http://identi.ca/drewp/rss"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
-	      My <a href="http://identi.ca/drewp">identi.ca</a> feed</h3>
+	      My <a href="http://identi.ca/drewp">identi.ca</a> feed (also on <a href="https://twitter.com/drewpca">twitter</a>)</h3>
+	      <dl>
+		
+	      </dl>
+	    </div>
+
+	    <div id="twitterfav">
+	      <h3><a href="https://twitter.com/drewpca/favorites">Twitter favorites</a></h3>
+	      
 	    </div>
 
 	    <div class="panel" id="ast-delicious-tags">
@@ -306,7 +314,7 @@
 	    </div>
 
 	    <div id="recent-reviews" class="panel">
-	      <div id="recent-reviews-filler">filler</div>
+	      <div id="recent-reviews-filler"></div>
 	      <a id="reviews-rss" href="http://revyu.com/latest/rss/people/drewp"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
 	    </div>
 
@@ -319,68 +327,41 @@
       </table>
     </div>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.2/prototype.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="/lib/moment.min.js"></script>
 
     <script type="text/javascript">
       // <![CDATA[
-      new Ajax.Request("http://bigasterisk.com/darcstable.html", 
-		       {method: 'get', 
-			onSuccess: function(transport) { 
-			    Element.insert($('recent-checkins'), transport.responseText); 
-			}});
+
+      $.get("/darcstable.html", function (h) {
+        $("#recent-checkins").html(h);
+      });
 
       function renderIdentica(result) {
-	  var now = new Date().valueOf();
-	  var msgs = new Element('dl');
-	  result.value.items.each(function(update) {
-	      var message = update.title.replace(/^drewp: /, '');
-	      
-	      var posted = update['y:published'].utime * 1000;
-	      
-	      var displayDate;
-	      if (posted < now - 86400000) {
-		  displayDate = new Date(posted).toJSON().replace(/\"?(.*)T.*/, "$1");
-	      } else {
-		  var mins = (now - posted) / 1000 / 60;
-		  if (mins < 60) {
-		      displayDate = Math.ceil(mins) + " minutes ago";
-		  } else {
-		      displayDate = Math.ceil(mins / 60) + " hours ago";
-		  }
-	      }
-	      Element.insert(msgs, new Element('dt').update(new Element('a', {href: update.link}).update(message))); 
-	      Element.insert(msgs, new Element('dd').update("posted "+displayDate));
-	  });
-	  Element.insert($('identica'), msgs);
+        var msgs = $("#identica dl");
+	result.value.items.forEach(function (update) {
+  	  msgs.append($("<dt>").append($("<a>").text(update.title.replace(/^drewp: /, '')).attr("href", update.link)));
+	  msgs.append($("<dd>").append(" posted "+moment(update['y:published'].utime*1000).fromNow()));
+        });
       }
 
-      new Ajax.Request("http://bigasterisk.com/recentReviews/", 
-		       {method: 'get', 
-			onSuccess: function(transport) { 
-			    Element.replace($('recent-reviews-filler'), transport.responseText); 
-			    var td = $('recent-reviews').firstDescendant().firstDescendant().firstDescendant().firstDescendant();
-			    Element.insert(td, {top: Element.remove($('reviews-rss'))});
-			}});
+      $.get("/recentReviews", function (h) {
+        $("#recent-reviews-filler").html(h);
+      });
 
-      new Ajax.Request("http://bigasterisk.com/recentPostFiles/", 
-		       {method: 'get', 
-			onSuccess: function(transport) { 
-			    Element.insert($('posted'), transport.responseText); 
-			}});
+      $.get("/recentPostFiles", function (h) {
+        $("#posted").append($("<div>").html(h));;
+      });
 
       function del1(result) { deliciousSection('recommended-extension', 'Firefox extensions', result); }
       function del2(result) { deliciousSection('recommended-webapp', 'Web apps', result); }
       function del3(result) { deliciousSection('recommended-tool', 'Software tools', result); }
 
       function deliciousSection(id, title, result) {
-	  var elem = new Element('div', {'id' : id}).update(title);
-	  
-	  var ul = new Element('ul');
-	  Element.insert(elem, ul);
-	  Element.insert($('recommendations'), elem);
-	  
-	  result.each(function(post) { 
-	      Element.insert(ul, new Element('li').update(new Element('a', {'href' : post.u}).update(post.d)));
+	  var ul = $("<ul>");
+	  $("#recommendations").append($("<div>").attr("id", id).text(title)).append(ul);
+	  result.forEach(function (post) { 
+	      ul.append($("<li>").append($("<a>").attr("href", post.u).text(post.d)));
 	  });
       }
       // ]]>
