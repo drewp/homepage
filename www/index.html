@@ -13,7 +13,7 @@
 
     <style type="text/css">
       body {
-	background: #111;
+	background: hsl(220, 12%, 5%);
 	color: white;
 	margin: 0;
 	font-family:arial,sans-serif;
@@ -34,7 +34,7 @@
 	border: 0;
       }
       h3, .recentReviews th.title {
-	  background:#1F7946 none repeat scroll 0 0;
+	  background:#1F5632 none repeat scroll 0 0;
 	  font-size:120%;
 	  text-align:left;
 	  padding:7px;
@@ -86,7 +86,6 @@
       }
       .delicious-tags h2 a {
 	  color: white;
-	  font-size: 80%;
       }
       #recent-reviews {
 	  width: 100%;   
@@ -116,7 +115,7 @@
 
       }
       #projects div {
-	  border-top: 1px solid #666;
+	  border-top: 1px solid #1d1d1d;
 	  margin-bottom: 5px;
       }
       #data-half {
@@ -139,7 +138,7 @@
 
       #identica dt a {
 	  color: yellow;
-}
+      }
       #identica dd {
 	  color: #666;
       }
@@ -152,10 +151,11 @@
       }
       #recommendations ul li {
 	  list-style: square;
+	  margin-bottom: 12px;
       }
       
       #recommendations ul, #posted span.size, #posted span.date, #identica dd {
-	  font-size: 80%;
+
       }
       #posted ul {
 	  margin: 0 0 0 2em;
@@ -181,12 +181,22 @@
       .darcsChanges .zebra1 .repo {background: #171717;}
 
       .darcsChanges .log, .darcsChanges .date {
-	  font-size: 75%;
+
       }
       .date  {
 	  white-space: nowrap;
       }
-
+      #twitterfav table {
+	  height: 16em;
+	  overflow-y: scroll;
+	  display: block;
+      }
+      #twitterfav td {
+          padding-bottom: 12px;
+      }
+      #twitterfav table a {
+	  color: #6b7391;
+      }
     </style>
   </head>
   <body>
@@ -217,12 +227,13 @@
 
 	    <div id="projects" class="panel">
 	      <h3>Projects</h3>
-	      <div><a href="http://bigasterisk.com/blockstack/">blockstack game</a></div>
-	      <div><a href="http://bigasterisk.com/tropeGraph/">tropeGraph</a></div>
-	      <div><a href="http://projects.bigasterisk.com/netbars/">netbars</a></div>
+              <div><a href="http://whopickedthis.com/">whopickedthis</a>  P2P recommendations</div>
+	      <div><a href="http://bigasterisk.com/blockstack/">blockstack</a>  augmented reality game</div>
+	      <div><a href="http://bigasterisk.com/tropeGraph/">tropeGraph</a> tvtropes + boingy graph</div>
+	      <div><a href="http://projects.bigasterisk.com/netbars/">netbars</a> traffic analyzer</div>
 	      <div><a href="http://csigen.quickwitretort.com/">CSI: Miami opening clip parody generator</a></div>
 	      <div><a href="http://computeracronym.quickwitretort.com/">Computer Acronym Computer</a></div>      
-	      <div><a href="/tahoe-playground/">Tahoe storage illustration</a> (for <a href="http://tahoe-lafs.org/trac/tahoe-lafs">Tahoe-LAFS</a>)</div>
+	      <div><a href="/tahoe-playground/">Tahoe storage illustration</a> for <a href="http://tahoe-lafs.org/trac/tahoe-lafs">Tahoe-LAFS</a></div>
 	      <div><a href="/automation/">Home automation projects</a></div>
 	      <div><a href="/boardsie/">boards.ie contest entry</a></div>
 	      <div><a href="http://whatsplayingnext.com/">whatsplayingnext.com movie showtimes</a></div>
@@ -297,20 +308,20 @@
 	    <div id="identica">
 	      <h3><a href="http://identi.ca/drewp/rss"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
 	      My <a href="http://identi.ca/drewp">identi.ca</a> feed (also on <a href="https://twitter.com/drewpca">twitter</a>)</h3>
-	      <dl>
+	      <table>
 		
-	      </dl>
+	      </table>
 	    </div>
 
 	    <div id="twitterfav">
-	      <h3><a href="https://twitter.com/drewpca/favorites">Twitter favorites</a></h3>
-	      
+	      <h3><a href="https://twitter.com/drewpca/favorites">Twitter favorites from other people</a></h3>
+	      <table></table>
 	    </div>
 
 	    <div class="panel" id="ast-delicious-tags">
 	      <h3><a href="http://feeds.delicious.com/v2/rss/drewpca"><img src="rss-faded.png" alt="atom feed" class="atom"/></a>
 	      My <a href="http://delicious.com/drewpca">most delicious tags</a></h3>
-	      <script type="text/javascript" src="http://feeds.delicious.com/v1/js/tags/drewpca?count=18;size=13-21;color=87ceeb-0000ff;title=my%20del.icio.us%20tags"></script>
+	      <script type="text/javascript" src="http://feeds.delicious.com/v1/js/tags/drewpca?count=50;size=13-21;color=87ceeb-0000ff;title=my%20del.icio.us%20tags"></script>
 	    </div>
 
 	    <div id="recent-reviews" class="panel">
@@ -334,26 +345,47 @@
       // <![CDATA[
 
       $.get("/darcstable.html", function (h) {
-        $("#recent-checkins").html(h);
+          $("#recent-checkins").html(h);
+	  lightUpDates($("#recent-checkins"));
       });
 
       function renderIdentica(result) {
-        var msgs = $("#identica dl");
-	result.value.items.forEach(function (update) {
-  	  msgs.append($("<dt>").append($("<a>").text(update.title.replace(/^drewp: /, '')).attr("href", update.link)));
-	  msgs.append($("<dd>").append(" posted "+moment(update['y:published'].utime*1000).fromNow()));
-        });
+          var msgs = $("#identica table");
+	  result.value.items.forEach(function (update) {
+	      msgs.append($("<tr>")
+			  .append($("<td>").addClass("date").text(update['dc:date'] /* UTC! */.split("T")[0]))
+			  .append($("<td>").append($("<a>")
+						   .text(update.title.replace(/^drewp: /, ''))
+						   .attr("href", update.link))));
+          });
+          lightUpDates($("#identica"));
       }
 
       $.get("/recentReviews", function (h) {
-        $("#recent-reviews-filler").html(h);
+          $("#recent-reviews-filler").html(h);
+	  lightUpDates($("#recent-reviews-filler"));
       });
 
       $.get("/recentPostFiles", function (h) {
-        $("#posted").append($("<div>").html(h));;
+          $("#posted").append($("<div>").html(h));;
+	  lightUpDates($("#posted"));
+      });
+      $.getJSON("/twitterFavorites", function (j) {
+	  var elem = $("#twitterfav table");
+	  j.favorites.forEach(function (rec) {
+	      var author = $("<a>").attr("href", rec.userLink).text(rec.screen_name);
+	      var text = $("<a>").attr("href", rec.link).text(rec.text);
+	      
+	      elem.append($("<tr>")
+			  .append($("<td>").addClass("date").text(rec.created.split("T")[0]))
+			  .append($("<td>").addClass("author").append(author))
+			  .append($("<td>").append(text)));
+	  });
+	  lightUpDates($("#twitterfav"));
       });
 
       function del1(result) { deliciousSection('recommended-extension', 'Firefox extensions', result); }
+      function del4(result) { deliciousSection('recommended-extension2', 'Chrome extensions', result); }
       function del2(result) { deliciousSection('recommended-webapp', 'Web apps', result); }
       function del3(result) { deliciousSection('recommended-tool', 'Software tools', result); }
 
@@ -364,12 +396,25 @@
 	      ul.append($("<li>").append($("<a>").attr("href", post.u).text(post.d)));
 	  });
       }
+
+var now = moment();
+function lightUpDates(elem) {
+    elem.find(".date").each(function (i, d) {
+	var t = moment($(d).text());
+	var ago = now.diff(t);
+	var daysAgo = ago / 1000 / 86400;
+	var f = Math.pow(Math.min(1, Math.max(0, daysAgo / 20)), .3);
+	$(d).css("background", "hsl(31, 91%, "+(40 - 30*f)+"%)");
+    });
+}
+
       // ]]>
     </script>
     <script src="http://pipes.yahoo.com/pipes/pipe.run?_id=cNJ_Fyhc3RGC4DSc6icw5g&amp;_render=json&amp;_callback=renderIdentica"></script>
-    <script src="http://feeds.delicious.com/v2/json/drewpca/firefox+extension+recommended?callback=del1"></script>
-    <script src="http://feeds.delicious.com/v2/json/drewpca/webapp+recommended?callback=del2"></script>
-    <script src="http://feeds.delicious.com/v2/json/drewpca/tool+recommended?callback=del3"></script>
+    <script src="http://feeds.delicious.com/v2/json/drewpca/firefox+extension+recommended?count=99&callback=del1"></script>
+    <script src="http://feeds.delicious.com/v2/json/drewpca/chrome+extension+recommended?count=99&callback=del4"></script>
+    <script src="http://feeds.delicious.com/v2/json/drewpca/webapp+recommended?count=99&callback=del2"></script>
+    <script src="http://feeds.delicious.com/v2/json/drewpca/tool+recommended?count=99&callback=del3"></script>
 
   </body>
 </html>
