@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Bios</title>
+  
+    <link rel="meta" type="application/rdf+xml" title="FOAF" href="http://bigasterisk.com/foaf.rdf" />
+  </head>
+  <body bgcolor="#FFFFFF">
+    <hr/>
+
+
+    <h2>Biographies for Drew Perttula (mostly autobiographies)</h2>
+
+    Some of these writeups have already appeared places; some are
+    additional sections I wrote for the site.
+
+    <h3><a href="http://imdb.com/name/nm1630495/bio">IMDB bio</a></h3>
+    <ul>
+      <h4>Height</h4>
+      <p>6' 9" (2.06 m)</p>
+
+      <h4>Spouse</h4>
+      <p>Kelsi Perttula 	(17 September 2006 - present)</p>
+
+      <h4>Trivia</h4>
+      <p>Earned a Bachelor of Science in Electrical Engineering and Computer Science from UC Berkeley (2000).</p>
+      <p>Enjoys home automation including homemade light dimmers and barcode scanner/electric strike for entry into his home.</p>
+    </ul>
+
+    <h3>2002 Theater playbill for <i>Guys and Dolls</i>:</h3>
+
+    Drew has worked on PLOT shows since 1990, and he recently
+    lit <i>City of Angels</i> at Masquers. For the last few years, he
+    has been building a computerized lighting system with fellow
+    lighting designer and programmer David McClosky. Drew tests all
+    his inventions at his home in Berkeley, much to the dismay of his
+    housemates. When he's not in the theater, Drew designs commerce
+    websites and creates visual effects for films.
+
+
+    <h3>2001 Theater playbill for <i>Kiss Me Kate</i>:</h3>
+
+    This year, for the first time, Drew will have worked on PLOT shows for
+    more than half his life. Drew graduated from U.C. Berkeley's School of
+    Engineering last year after studying computer graphics and computer
+    vision. He returned to Berkeley as a teaching assistant last semester
+    and now is looking for a job creating visual effects for movies.  At
+    home he regularly violates his lease conditions by building giant
+    furniture and lighting systems. Even his W.C. has a sound system and
+    computer-controlled lighting.
+
+
+    <h3>2002 Theater playbill for <i>City of Angels</i>:</h3>
+
+    Drew has lit Bay Area shows for the last 12 years. By day, he programs
+    web sites and ticketing systems for a ferry company; by night, he
+    designs visual effects for films. At home he regularly violates his
+    lease conditions by building giant furniture and lighting
+    systems. Drew is attempting to use his electrical engineering and
+    computer science degree to build an advanced computerized lighting
+    system.
+
+
+    <h3><a href="http://www.creativecow.net/leaders/perttula_drew/perttula_drew.html">Creative Cow</a> profile</h3>
+
+    Drew is an open source nut who aims to work on visual effects
+    production. He builds ridiculous hardware and writes all sorts of
+    software. Some of his favorite answers to computer questions are "zsh
+    can already do that" and "I'd recommend python".
+
+    Drew took two paying video projects in the last year, yet he owns no
+    video editing software and does not intend to buy any. This is why
+    it's very important that he develop his own editing system, and
+    fast. You'll be able to use it, too, real soon now.
+
+    Drew Perttula is a leader in the Linux forum at Creativecow.net.
+
+
+    <h3><a href="http://linuxmovies.bigasterisk.com/DrewP">Linuxmovies resource guide introduction</a></h3>
+
+    I'm Drew Perttula, from Berkeley, CA. I started the wiki, which is why
+    some pages are modified by my zope user drewp instead of my wiki name
+    DrewP.
+
+    I have another job doing programming, web site construction, and
+    system administration. I want to be working on films. I was a tester
+    for Silicon Grail's Rayz compositor before it got eaten. I'm a regular
+    gimp user, and I write python scripts to auto-generate graphics with
+    the gimp.
+
+    I'm working on a theater lighting controller and a DV editing suite.
+
+    I hang out on irc.openprojects.net in #python, #livid, #pygame, #zope,
+    #matterial, and #slackware.
+
+
+    <h3>Brief graphics and programming background</h3>
+
+    At UC Berkeley, I focused on computer graphics and computer vision. I
+    also took a few hardware and computer architechture courses (and
+    returned to TA for two of them). I took some elective dynamics and
+    fluid mechanics courses because I'm interested in physical
+    simulation. Nowadays, I work on open source projects such as a <a
+                                                                      href="http://light9.bigasterisk.com">theater lighting control system</a>
+    and a <a href="http://cuisine.bigasterisk.com/">digital video
+      editor</a>. Some other past projects are on my <a href="http://bigasterisk.com">homepage</a>.
+    <p>
+      I much prefer the open source world, although I have experience with Media
+      100, Premiere, and Final Cut Pro systems; and Rayz and Maya.
+    </p>
+
+      <h3>A Cuisine presentation intro</h3>
+
+
+      I've always lived in the Bay Area, and I studied computer graphics and
+      computer vision at U.C. Berkeley. I took some elective dynamics, fluid
+      mechanics, and robotics courses because I'm interested in physical
+      simulation. I've been a videographer since 1992 and interested in
+      computer graphics for all my moviegoing life. I've worked on theater
+      lighting for almost that long, which I love because of the teamwork
+      between artists and technicians and because quality, efficiency, and
+      creativity are all rewarded.
+    <p>
+      Cuisine is one of my recent projects. I took two paying video projects in
+      the last year, yet I owned no video editing software and didn't intend
+      to buy any. Like a good open-source enthusiast, I started developing
+      my own (after researching the existing systems). My first priority
+      was to complete the first video project by November 2002, but my other
+      big priority was to build something that would continue to work for me
+      and would help others. Cuisine is a set of libraries and small tools
+      for processing, annotating, and editing video. I'll be talking about
+      the design decisions I made, the tools I chose, and what I'm now able
+      to accomplish.
+    </p>
+
+
+
+    <h3>Computer experience</h3>
+
+    Basic since 1984, C since 1993, Perl and Tcl since 1996, Python since 1999.
+    <p>
+      DOS (and some CP/M) since 1984. Owned an Amiga since 1989. Run Linux
+      machines since about 1995; continuously since 1996 (web site since
+      around <a href="http://web.archive.org/web/19970412181448/http://fhb121.reshall.berkeley.edu/">then</a>, too). </p>
+    <p>
+</p>
+
+      <h3 id="courses">Academic history</h3>
+
+      I attended the <a href="http://www.college-prep.org/">College
+        Preparatory School</a> in Oakland, California from 1992-1996.  Then I
+      attended <a name="berkeley"/>U.C. Berkeley, described below.
+    <p>
+      Most course names are fictional based on what I remember
+      learning.</p>
+    <p>
+      Schedules are approximate, as I may have deviated from my official
+      schedules in ways that I have now forgotten. Some subjects are
+      abbreviated: computer science, mechanical engineering, electrical
+      engineering.  You could try to look up course descriptions at
+      <a href="http://www.berkeley.edu/catalog/">on Berkeley's site</a>.</p>
+    <p>
+<pre>
+Fall 1996: 
+ Math 53M "Calculus, Especially on Curves and Surfaces", 
+ History 7A "Some of U.S. History", 
+ CS 61A "Structure and Interpretation of Computer Programs"
+
+Spring 1997: 
+ CS 61C "Computer Architectures", 
+ Math 54M "Linear Algebra", 
+ Physics 7A "Kinetics",
+ Linguistics 55 "Survey of Linguistics"
+
+Fall 1997: 
+ English 1A "Book reading",
+ Physics 7B "Electricity and Magnetism"
+
+Spring 1998: 
+ CS 170 "Algorithms",
+ Math 55 "Discrete Math and Logic",
+ Physics 7C "Optics and Relativity",
+ CS 184 "Intro to Graphics"
+
+Fall 1998: 
+ ME 104 "Solving Dynamics Problems", 
+ CS 284 "Curved surfaces", 
+ CS 164 "Compilers", 
+ CS 294 "Rapid Prototyping"
+
+Spring 1999: 
+ Classics 28 "Mythology", 
+ EE 120 "Signals and Systems", 
+ CS 280 "Computer Vision", 
+ CS 298 "Research Assistant on a Vision Perception and Grouping Project"
+
+Fall 1999: 
+ EE 125 "Intro to Robotics", 
+ CS 150 "Digital Design", 
+ Linguistics 125 "Intro to Theories of Syntax", 
+ CS 294-2 "Perception and grouping"
+
+Spring 2000: 
+ EE 192 "Sensors, Actuators, and Control Systems for Robots",
+ Scandinavian 116 "Hans Christian Andersen"
+
+Fall 2000 (can't find course numbers): 
+ Political Science "U.S. Political Science",
+ ME "Fluid Mechanics", 
+ E 45 "Intro to Materials"
+</pre>
+    </p>
+
+    <h3>Even more background</h3>
+
+    I like to build my own furniture. Here's a <a href="http://bigasterisk.com/post/shelf.jpg">plan for a shelf</a> I now
+    use. I built my own desk which can be seen in the photos at the bottom of <a href="http://www.linuxmovies.org/meeting/2002/11.07.highlights.html">this recent page</a>. 
+    <a href="http://bigasterisk.com/projects/apartment/overlay">Here's</a> a
+    composite image showing the desk shortly after I built it. The left
+    half is a POV-Ray rendering of the plans for the desk; the right half
+    of the image is a photo of the desk (with a wide-angle lens). The
+    chair is in the middle of the dissolve from rendered to real, so it
+    only appears halfway.
+    <p>
+</p>
+
+   
+  </body>
+</html>
