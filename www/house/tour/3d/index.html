@@ -17,22 +17,28 @@
      container.appendChild( renderer.domElement );
 
      var loader = new THREE.ColladaLoader();
-     loader.load('clara_export/house1.dae', function(bundle) {
+     loader.load('clara_export/after-blender.dae', function(bundle) {
        var cams = {
          overhead: bundle.scene.getObjectByName('CamOverhead'),
          frontDoor: bundle.scene.getObjectByName('CamFrontDoor'),
+         rear: bundle.scene.getObjectByName('CamRear'),
          };
        var scene = bundle.scene;
 
        window.scene = scene;
        window.cams = cams;
-       
-       THREEx.SolidWireframeMaterial.Shader.uniforms.lineWidth.value = 2;
-       var obj = scene.getObjectByName('upstairs').getObjectByName('wallup_Plane.005').children[0];
-       var wf = obj;//.clone();
-       //scene.add(wf);
-       wf.material = new THREEx.SolidWireframeMaterial(obj.geometry);
 
+       var solidConfig = THREEx.SolidWireframeMaterial.Shader.uniforms;
+       solidConfig.lineWidth.value = 1.2;
+       solidConfig.lineColor.value = new THREE.Color( 0x00ff00 );
+       
+       [
+         scene.getObjectByName('upstairs').getObjectByName('wallup_Plane_005').children[0],
+         //scene.getObjectByName('upstairs').getObjectByName('floor').children[0],
+        ].forEach(function(obj) {
+
+       obj.material = new THREEx.SolidWireframeMaterial(obj.geometry);
+});
        
        var mouse	= {x : 0, y : 0}
        document.addEventListener('mousemove', function(event){
@@ -44,12 +50,22 @@
        var camera = cams.frontDoor.clone();
        scene.add(camera);
 
+       var xChase = 0;
        requestAnimationFrame(function animate(){
-         camera.position.copy(cams.frontDoor.position);
-         camera.position.lerp(cams.overhead.position, mouse.x);
+         xChase += (mouse.x - xChase) * .1;
+         var c1 = cams.frontDoor;
+         var c2 = cams.overhead;
+         if (xChase > .5) {
+           c1 = c2;
+           c2 = cams.rear;
+         }
+         var frac = (xChase * 2) % 1.0;
+         
+         camera.position.copy(c1.position);
+         camera.position.lerp(c2.position, frac);
 
-         camera.setRotationFromQuaternion(cams.frontDoor.quaternion);
-         camera.quaternion.slerp(cams.overhead.quaternion, mouse.x);
+         camera.setRotationFromQuaternion(c1.quaternion);
+         camera.quaternion.slerp(c2.quaternion, frac);
 
 	 renderer.render( scene, camera.children[0] );		
 	 requestAnimationFrame( animate );
