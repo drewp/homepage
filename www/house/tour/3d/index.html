@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>house model</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="scene"></div>
+    <script src="lib/mrdoob-three.js-1769fbf/build/three.js"></script>
+    <script src="lib/mrdoob-three.js-1769fbf/examples/js/loaders/ColladaLoader.js"></script>
+    <script src="lib/threex.solidwireframe.js"></script>
+    <script>
+     var container = document.querySelector("#scene");
+
+     var renderer = new THREE.WebGLRenderer( { antialias: true } );
+     renderer.setSize(800, 500);
+     container.appendChild( renderer.domElement );
+
+     var loader = new THREE.ColladaLoader();
+     loader.load('clara_export/house1.dae', function(bundle) {
+       var cams = {
+         overhead: bundle.scene.getObjectByName('CamOverhead'),
+         frontDoor: bundle.scene.getObjectByName('CamFrontDoor'),
+         };
+       var scene = bundle.scene;
+
+       window.scene = scene;
+       window.cams = cams;
+       
+       THREEx.SolidWireframeMaterial.Shader.uniforms.lineWidth.value = 2;
+       var obj = scene.getObjectByName('upstairs').getObjectByName('wallup_Plane.005').children[0];
+       var wf = obj;//.clone();
+       //scene.add(wf);
+       wf.material = new THREEx.SolidWireframeMaterial(obj.geometry);
+
+       
+       var mouse	= {x : 0, y : 0}
+       document.addEventListener('mousemove', function(event){
+	 mouse.x	= (event.clientX / window.innerWidth );
+	 mouse.y	= (event.clientY / window.innerHeight);
+       }, false)
+
+       
+       var camera = cams.frontDoor.clone();
+       scene.add(camera);
+
+       requestAnimationFrame(function animate(){
+         camera.position.copy(cams.frontDoor.position);
+         camera.position.lerp(cams.overhead.position, mouse.x);
+
+         camera.setRotationFromQuaternion(cams.frontDoor.quaternion);
+         camera.quaternion.slerp(cams.overhead.quaternion, mouse.x);
+
+	 renderer.render( scene, camera.children[0] );		
+	 requestAnimationFrame( animate );
+       })
+     });
+     
+    </script>
+  </body>
+</html>
