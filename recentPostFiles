@@ -4,41 +4,45 @@ web widget showing recent files in /my/post
 """
 from __future__ import division
 import os, sys, datetime
-from twisted.internet import reactor
-from twisted.python import log
-from nevow.appserver import NevowSite
-from nevow import rend, loaders
+from bottle import route, run, template
 
 top = "/my/post"
-recent = 5
+recent = 8
 
-class Main(rend.Page):
-    docFactory = loaders.xmlstr("""
-<ul xmlns:n="http://nevow.com/ns/nevow/0.1"
-    n:render="sequence" n:data="files">
-  <li n:pattern="item">
-    <span class="date" n:render="string" n:data="0"></span>
+tmpl = '''
+<ul n:render="sequence" n:data="files">
+  % for date, path, size in files:
+  <li>
+    <span class="date">{{date}}</span>
     <span class="name">
-      <a><n:attr name="href">http://bigasterisk.com/post/<n:invisible n:render="string" n:data="1"/></n:attr><n:invisible n:render="string" n:data="1"/></a>
+      <a href="https://bigasterisk.com/post/{{path}}">{{path}}</a>
     </span>
-    <span class="size">(<n:invisible n:render="string" n:data="2"/>kb)</span>
+    <span class="size">({{size}}kb)</span>
   </li>
-</ul>""")
-    def data_files(self, ctx, data):
-        files = []
-        for filename in os.listdir(top):
-            try:
-                s = os.stat(os.path.join(top, filename))
-                files.append((s.st_mtime, filename, s.st_size))
-            except OSError, e:
-                print "error", filename, e
-        files.sort(reverse=True)
-        return [(datetime.datetime.fromtimestamp(t).date().isoformat(),
-                 f,
-                 s // 1024) for t, f, s in files][:recent]
-    
-print Main().data_files(0,0)
+  % end
+</ul>
+'''
 
-log.startLogging(sys.stdout)
-reactor.listenTCP(9006, NevowSite(Main()))
-reactor.run()
+def listFiles(top, sub=''):
+    for filename in os.listdir(os.path.join(top, sub)):
+        try:
+            full = os.path.join(top, sub, filename)
+            if os.path.isdir(full):
+                for row in listFiles(top, os.path.join(sub, filename)):
+                    yield row
+            else:
+                s = os.stat(full)
+                yield (s.st_mtime, os.path.join(sub, filename), s.st_size)
+        except OSError, e:
+            print "error", filename, e
+
+@route('/')
+def index():
+    files = list(listFiles(top))   
+    files.sort(reverse=True)
+    return template(tmpl, files=[(datetime.datetime.fromtimestamp(t).date().isoformat(),
+                                  f,
+                                  s // 1024) for t, f, s in files][:recent])
+
+run(host='0.0.0.0', port=9006)
+    
