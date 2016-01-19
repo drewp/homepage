@@ -16,6 +16,7 @@ from lxml.builder import ElementMaker
 from xml.utils import iso8601
 import warnings
 warnings.filterwarnings('ignore', category=DeprecationWarning)
+warnings.filterwarnings('ignore', category=UserWarning)
 from nevow import flat, tags as T
 warnings.resetwarnings()
 
