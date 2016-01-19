@@ -140,7 +140,7 @@ if __name__=='__main__':
   # simple main program to read barcodes, attempt to send them to
   # another server, and beep. this is actually the entire
   # scanner-reading program which i use for
-  # http://bigasterisk.com/automation/door (the server program does
+  # //bigasterisk.com/automation/door (the server program does
   # the validation and opens the door)
   
   scan=Scanner()

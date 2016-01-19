@@ -14,20 +14,20 @@
 
 <p>The web page writes <a href="../commands/">commands</a> to a data store. A special heater-and-lights service watches for new commands that want the heater to be turned on. I think new commands also emit a message on a <a href="http://github.com/progrium/miyamoto">pubsubhubbub message exchange</a> so the heater service is told more immediately about the new request.  </p>
 
-<p>The heater service decides when to ask for the heater signal to be sent. When the heater should be on, it PUTs a "1" to the right pin URI according to my <a href="http://bigasterisk.com/darcs/?r=room;a=annotate_shade;h=20100816070136-312f9-2477e041d32dc00c4d6f329959eba7065ed4f565.gz;f=devices.n3">configuration (line 17)</a>. A <a href="http://bigasterisk.com/darcs/?r=room;a=headblob;f=/arduinoport/drv.py">simple service</a> sends pin requests to an arduino board with the <a href="http://firmata.sourceforge.net/wiki/Protocol">firmata protocol</a>. </p>
+<p>The heater service decides when to ask for the heater signal to be sent. When the heater should be on, it PUTs a "1" to the right pin URI according to my <a href="//bigasterisk.com/darcs/?r=room;a=annotate_shade;h=20100816070136-312f9-2477e041d32dc00c4d6f329959eba7065ed4f565.gz;f=devices.n3">configuration (line 17)</a>. A <a href="//bigasterisk.com/darcs/?r=room;a=headblob;f=/arduinoport/drv.py">simple service</a> sends pin requests to an arduino board with the <a href="http://firmata.sourceforge.net/wiki/Protocol">firmata protocol</a>. </p>
 
 <p>That pin drives a little relay (through an <a href="http://octopart.com/parts/search?q=4N26&amp;js=on">optoisolator</a>) that connects the same wires that the standard wall thermostat connects. The two controllers are in series, so the wall thermostat still works normally. I tried to build a sensor that would tell me if the wall thermostat was turning on the heater (so I could plot all our heater usage, for example), but I didn't do a good job with that circuit. It's really noisy. I'd rather just obsolete the wall thermostat completely.</p>
 
 <p>Here's the computer side with the opto. </p>
-<img src="http://photo.bigasterisk.com/digicam/dl-2008-02-15/IMG_0705.JPG?size=large"/>
+<img src="//photo.bigasterisk.com/digicam/dl-2008-02-15/IMG_0705.JPG?size=large"/>
 
 
 <p>Here's the heater side with the relay. </p>
-<img src="http://photo.bigasterisk.com/digicam/dl-2008-02-15/IMG_0708.JPG?size=large"/>
+<img src="//photo.bigasterisk.com/digicam/dl-2008-02-15/IMG_0708.JPG?size=large"/>
 
 
 <p>The relay is powered by this old computer power supply, which is also powering the wifi router whose own supply broke. </p>
-<img src="http://photo.bigasterisk.com/digicam/dl-2008-02-15/IMG_0706.JPG?size=large"/>
+<img src="//photo.bigasterisk.com/digicam/dl-2008-02-15/IMG_0706.JPG?size=large"/>
 
 
 <p>I used to think the heater was going to be the most sensitive and critical output in my home automation system, since a malfunction could leave the heater on continuously and possibly start a fire. The software is full of checks and traps that try to shut off the heater if anything is going wrong. In fact, the garage door turned out to be much worse when it came to handling failures, since even a momentary mistake leaves the garage door completely open. </p>

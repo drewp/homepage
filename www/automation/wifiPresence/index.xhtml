@@ -12,7 +12,7 @@
 
 <p>I run two <a href="http://en.wikipedia.org/wiki/Linksys_WRT54G_series">WRT54Gs</a> that can take the <a href="http://www.polarcloud.com/tomato">Tomato firmware</a>. Tomato includes a web server with some nice web pages (<a href="http://www.polarcloud.com/img/ssbwm100.png">one screenshot</a>), and they happen to do a lot of their rendering in your browser. This means the pages either contain or fetch more pages containing <a href="http://www.json.org/">JSON</a> data. </p>
 
-<p>To gather the wifi users around my house, therefore, I just do simple web page fetches with <a href="http://github.com/benoitc/restkit">restkit</a> and pull out the JSON. My <a href="http://bigasterisk.com/darcs/?r=entrancemusic;a=headblob;f=/entrancemusic.py">source code is here</a>. It's about 30 lines too long because of the way I share some of my configuration between this system and my web security system. The communication to the routers is in getPresentMacAddrs:</p>
+<p>To gather the wifi users around my house, therefore, I just do simple web page fetches with <a href="http://github.com/benoitc/restkit">restkit</a> and pull out the JSON. My <a href="//bigasterisk.com/darcs/?r=entrancemusic;a=headblob;f=/entrancemusic.py">source code is here</a>. It's about 30 lines too long because of the way I share some of my configuration between this system and my web security system. The communication to the routers is in getPresentMacAddrs:</p>
 <pre>
 def getPresentMacAddrs(routers):
     addrs = [] # (addr, signalStrength, name)

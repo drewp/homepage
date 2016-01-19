@@ -1,5 +1,5 @@
 <div id="footer">
-  <p>Design by <a href="http://www.freecsstemplates.org/">CSS Templates</a>, modified by Drew Perttula under <a href="http://bigasterisk.com/automation/domesticated/license.txt">CC</a>.</p>
+  <p>Design by <a href="http://www.freecsstemplates.org/">CSS Templates</a>, modified by Drew Perttula under <a href="//bigasterisk.com/automation/domesticated/license.txt">CC</a>.</p>
 </div>
 <script type="text/javascript"> 
 	  // <![CDATA[
@@ -13,7 +13,7 @@ function fillDeliciousList(elem, tags, title) {
     elem.append($("<h4>").append($("<a>").attr('href', 'http://www.delicious.com/drewpca/'+tags).text("See this list on delicious.com")));
     outputList.append("...");
     $.ajax({
-	url: "http://feeds.delicious.com/v2/json/drewpca/"+tags, 
+	url: "https://api.del.icio.us/v2/json/drewpca/"+tags, 
         data: {count: 100},
 	dataType: "jsonp",
 	success: function (data, status, xhr) {

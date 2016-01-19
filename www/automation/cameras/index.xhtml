@@ -18,13 +18,13 @@
 
 <p>I have one bt848 video capture card in a computer, but I wanted to connect a few video cameras at once. I used a <a href="http://octopart.com/mc14052bcp-on+semiconductor-49906">MC14052BCP analog multiplexer chip</a> and two pins on a parallel port to let my camera software flip the video input before grabbing a frame. </p>
 
-<img src="http://photo.bigasterisk.com/digicam/dl-2010-03-13/DSC_5660.JPG?size=large"/>
+<img src="//photo.bigasterisk.com/digicam/dl-2010-03-13/DSC_5660.JPG?size=large"/>
 
 <h2>Snapshot tool</h2>
 
 <p>When I'm looking at live frames from a camera, I can click a button to save a snapshot. Button clicks result in an ajax HTTP call from the browser that is forwarded to a snapshot service which fetches a new frame and write it to disk.</p>
 
-<p><a href="http://bigasterisk.com/darcs/?r=httpsnapshot;a=tree">Code is here.</a> This is a web server that fetches preset resources from other web servers and saves them into files according to templates. On my camera viewing pages, I simply put POST forms that request that a picture is saved. The httpsnapshot service grabs a jpeg frame, saves it into my photo area, and my photo site notices the new file automatically.</p>
+<p><a href="//bigasterisk.com/darcs/?r=httpsnapshot;a=tree">Code is here.</a> This is a web server that fetches preset resources from other web servers and saves them into files according to templates. On my camera viewing pages, I simply put POST forms that request that a picture is saved. The httpsnapshot service grabs a jpeg frame, saves it into my photo area, and my photo site notices the new file automatically.</p>
 
 
 	    <div class="deliciousList" tags="webcam"/>
