@@ -142,7 +142,21 @@
      },
      onGraphChanged: function() {
        if (!this.graph.graph) return;
-       this.graphJson = JSON.stringify(this.graph.graph.quadStore.index, {}, 2);
+
+       function objFromMap(m) {
+         var ret = {};
+         m.forEach(function(v, k) { // why are these backwards? unexpected 
+           if (v.values !== undefined) {
+             // probably a Map
+             v = objFromMap(v);
+           }
+           ret[k] = v;
+         });
+         return ret;
+       }
+
+       var index = this.graph.graph.quadStore.index;
+       this.graphJson = JSON.stringify(objFromMap(index), {}, 2);
      }
    });
   </script>
