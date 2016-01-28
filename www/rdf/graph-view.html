@@ -156,7 +156,12 @@
        }
 
        var index = this.graph.graph.quadStore.index;
-       this.graphJson = JSON.stringify(objFromMap(index), {}, 2);
+
+       var compactJson = JSON.stringify(objFromMap(index), {}, 2);
+       for (var i=0; i < 3; i++) {
+         compactJson = compactJson.replace(/\n\s*([^{]+)\n/g, " $1\n");
+       }
+       this.graphJson = compactJson;
      }
    });
   </script>
