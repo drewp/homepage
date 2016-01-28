@@ -59,12 +59,15 @@
      }.bind(this));
 
      this.connect(eventsUrl);
-     window.addEventListener('focus', function() {
-       // may help with tab changes, but isn't working for screen-turned-back-on
-       this.connect(eventsUrl);
-     }.bind(this));
+     this.reconnectOnWake();
    }
 
+   StreamedGraph.prototype.reconnectOnWake = function() {
+     // it's not this, which fires on every mouse-in on a browser window, and doesn't seem to work for screen-turned-back-on
+     //window.addEventListener('focus', function() { this.connect(eventsUrl); }.bind(this));
+
+   };
+   
    StreamedGraph.prototype.flushUpdates = function() {
      if (this.store === null) {
        requestAnimationFrame(function() { this.flushUpdates() }.bind(this));
