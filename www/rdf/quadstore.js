@@ -1,7 +1,7 @@
 // a more straightforward store than rdfstore.Store, which I haven't
 // figured out yet wrt quads.
 function QuadStore() {
-    this.ntLookup = new Map(); // ntstring: node
+    this.nodeLookup = new Map(); // ntstring: node
     this.index = new Map();  // {graphNt: {subjNt: {predNt: {objNt: true}}}}
 }
 
@@ -11,7 +11,7 @@ QuadStore.prototype.clear = function() {
 
 QuadStore.prototype.ntKey = function(node) {
     var nt = node.toNT();
-    this.ntLookup.set(nt, node);
+    this.nodeLookup.set(nt, node);
     return nt; // could return a small int, even
 }
 
@@ -53,6 +53,7 @@ QuadStore.prototype.remove = function(quad) {
         var l3 = l2.get(p);
         if (l3 === undefined) { return; }
         l3.delete(this.ntKey(quad.object));
+        // (may leave garbage in this.nodeLookup)
         if (clean(l2, p, l3)) {
             if (clean(l1, s, l2)) {
                 clean(this.index, g, l1);
@@ -63,6 +64,32 @@ QuadStore.prototype.remove = function(quad) {
         throw e;
     }
 };
-QuadStore.prototype.quads = function(onQuad) {
-    // yield all quads. parse the NT? look it up in another mapping?
+
+QuadStore.prototype.quads = function(match, onQuad) {
+    // match is {subject: null, predicate: null, object: null, graph: null}
+    var matchNt = {s: (match && match.subject) ? match.subject.toNT() : null,
+                   p: (match && match.predicate) ? match.predicate.toNT() : null,
+                   o: (match && match.object) ? match.object.toNT() : null,
+                   g: (match && match.graph) ? match.graph.toNT() : null};
+    var node = this.nodeLookup;
+    this.index.forEach(function(vs, graphNt) {
+        if (matchNt.g === null || matchNt.g == graphNt) {
+            vs.forEach(function(vp, subjNt) {
+                if (matchNt.s === null || matchNt.s == subjNt) {
+                    vp.forEach(function(vo, predNt) {
+                        if (matchNt.p === null || matchNt.p == predNt) {
+                            vo.forEach(function(_true, objNt) {
+                                if (matchNt.o === null || matchNt.o == objNt) {
+                                    onQuad({subject: node.get(subjNt),
+                                            predicate: node.get(predNt),
+                                            object: node.get(objNt),
+                                            graph: node.get(graphNt)});
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
 };
