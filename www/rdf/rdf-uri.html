@@ -1,0 +1,17 @@
+<script>
+ window.BigastUri = {
+   // not well defined for uri prefixes that are string prefixes of each other
+   compactUri: function(uri) {
+     if (uri === undefined) {
+       return uri;
+     }
+     for (var short of Object.keys(window.NS)) {
+       var prefix = window.NS[short];
+       if (uri.indexOf(prefix) == 0) {
+         return short + ':' + uri.substr(prefix.length);
+       }
+     }
+     return uri;
+   }
+ };
+</script>

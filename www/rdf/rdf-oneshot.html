@@ -1,0 +1,28 @@
+<link rel="import" href="/lib/polymer/1.0.9/iron-ajax/iron-ajax.html">
+
+<dom-module id="rdf-oneshot">
+  <!-- call go() to send a oneShot message -->
+  <template>
+    <iron-ajax id="ajax" method="POST" headers='{"content-type": "text/n3"}'></iron-ajax>
+  </template>
+  <script>
+    function ntStatement(s, p, o) {
+      return s + ' ' + p + ' ' + o + '.';
+    }
+    Polymer({
+      is: 'rdf-oneshot',
+      properties: {
+        object: { notify: true },
+        post: { notify: true },
+        predicate: { notify: true },
+        subject: { notify: true }
+      },
+      go: function () {
+        var ajax = this.$.ajax;
+        ajax.setAttribute('url', this.post);
+        ajax.setAttribute('body', ntStatement(this.subject, this.predicate, this.object));
+        ajax.generateRequest();
+      }
+    });
+  </script>
+</dom-module>
