@@ -3,7 +3,7 @@
 <dom-module id="graph-view">
   <template>
     <style>
-    </style>
+    </style>    
     <pre>{{graphJson}}</pre>
     <!--
     todo: port this:
@@ -130,7 +130,26 @@
     -->
   </template>
   <script>
+   function stringifyMap(m) {
+     function objFromMap(m) {
+       var ret = {};
+       m.forEach(function(v, k) { // why are these backwards? unexpected 
+         if (v.values !== undefined) {
+           // probably a Map
+           v = objFromMap(v);
+         }
+         ret[k] = v;
+       });
+       return ret;
+     }
 
+     var compactJson = JSON.stringify(objFromMap(m), {}, 2);
+     for (var i=0; i < 3; i++) {
+       compactJson = compactJson.replace(/\n\s*([^{]+)\n/g, " $1\n");
+     }
+     return compactJson;
+   }
+   
    Polymer({
      is: "graph-view",
      properties: {
@@ -142,26 +161,8 @@
      },
      onGraphChanged: function() {
        if (!this.graph.graph) return;
-
-       function objFromMap(m) {
-         var ret = {};
-         m.forEach(function(v, k) { // why are these backwards? unexpected 
-           if (v.values !== undefined) {
-             // probably a Map
-             v = objFromMap(v);
-           }
-           ret[k] = v;
-         });
-         return ret;
-       }
-
        var index = this.graph.graph.quadStore.index;
-
-       var compactJson = JSON.stringify(objFromMap(index), {}, 2);
-       for (var i=0; i < 3; i++) {
-         compactJson = compactJson.replace(/\n\s*([^{]+)\n/g, " $1\n");
-       }
-       this.graphJson = compactJson;
+       this.graphJson = stringifyMap(index);
      }
    });
   </script>
