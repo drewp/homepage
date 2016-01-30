@@ -1,172 +1,210 @@
 <link rel="import" href="/lib/polymer/1.0.9/polymer/polymer.html">
 
+<script src="/lib/async/80f1793/async.js"></script>
+<script src="quadstore.js"></script>
+<script src="/lib/rdf_store/0.9.7/dist/rdfstore.js"></script>
+
+<script>
+ var eachJsonLdQuad = function(rdfEnv, jsonLdObj, onQuad, done) {
+   jsonld.expand(jsonLdObj, function onExpand(err, expanded) {
+     if (err) { throw new Error(); }
+     expanded.forEach(function(g) {
+       var graph = g['@id'];
+       g['@graph'].forEach(function(subj) {
+         for (var pred in subj) {
+           if (pred.match(/^[^@]/)) {
+             subj[pred].forEach(function(obj) {
+               var quad = {
+                 subject: rdfEnv.createNamedNode(subj['@id']),
+                 predicate: rdfEnv.createNamedNode(pred),
+                 object: (obj['@id'] ? rdfEnv.createNamedNode(obj['@id']) :
+                          rdfEnv.createLiteral(
+                   obj['@value'], obj['@type'], obj['@language'])),
+                 graph: rdfEnv.createNamedNode(graph),
+               };
+               onQuad(quad);
+             });
+           }
+         }
+       });
+     });
+     done();
+   });
+ };
+ 
+ function StreamedGraph(eventsUrl, onGraphChanged, onStatus) {
+   // holds a rdfstore.js store, which is synced to a server-side
+   // store that sends patches over SSE
+   this.onStatus = onStatus;
+   this.onGraphChanged = onGraphChanged;
+   this.onStatus('startup...');
+   this.quadStore = new QuadStore();
+   
+   this.store = null;
+   this.updates = [];
+   new rdfstore.Store(function(err, store) {
+     this.store = store; // barely used yet- data is really in quadStore
+     this.flushUpdates();
+   }.bind(this));
+
+   this.connect(eventsUrl);
+   this.reconnectOnWake();
+ }
+
+ StreamedGraph.prototype.reconnectOnWake = function() {
+   // it's not this, which fires on every mouse-in on a browser window, and doesn't seem to work for screen-turned-back-on
+   //window.addEventListener('focus', function() { this.connect(eventsUrl); }.bind(this));
+
+ };
+ 
+ StreamedGraph.prototype.flushUpdates = function(done) {
+   async.retry(
+     {times: 20, interval: 100},
+     function (cb) {
+       if (this.store === null) {
+         requestAnimationFrame(function() {
+           cb("store not ready");
+         });
+         return;
+       }
+       this.flushUpdatesWithStore(cb);
+     }.bind(this),
+     function (err) {
+       if(done) done();
+     });
+ };
+
+ StreamedGraph.prototype.flushUpdatesWithStore = function(done) {
+   // This is flushUpdates, but we've waited for the initial store to
+   // be ready.
+   async.whilst(
+     // note that more updates might get added while this is running
+     function test() { return this.updates.length > 0; }.bind(this),
+     function go(done) {
+       var update = this.updates.shift();
+       if (!update) {
+         return done();
+       }
+       this.flushOneUpdate(update, done);
+     }.bind(this),
+     function(err) {
+       done();
+     });
+ };
+
+ StreamedGraph.prototype.flushOneUpdate = function(update, done) {
+   if (update.type == 'fullGraph') {
+     this.onStatus('sync- full graph update');
+     this.replaceFullGraph(update.data, function onReplaced() {
+       this.onStatus('synced');
+       this.onGraphChanged();
+       done();
+     }.bind(this));
+   } else if (update.type == 'patch') {
+     this.onStatus('sync- updating');
+     this.patchGraph(update.data, function onPatched() {
+       this.onStatus('synced');
+       this.onGraphChanged();
+       done();
+     }.bind(this));
+   } else {
+     throw new Error(update.type);
+   }
+ };
+ 
+ StreamedGraph.prototype.connect = function(eventsUrl) {
+   this.onStatus('connecting...');
+   this.events = new EventSource(eventsUrl);
+   
+   this.events.addEventListener('error', function(ev) {
+     // todo: this is piling up tons of retries and eventually multiple connections
+     this.onStatus('connection lost- retrying');
+     setTimeout(function() {
+       requestAnimationFrame(function() {
+         this.connect(eventsUrl);
+       }.bind(this));
+     }.bind(this), 3000);
+   }.bind(this));
+   
+   this.events.addEventListener('fullGraph', function(ev) {
+     this.updates.push({type: 'fullGraph', data: ev.data});
+     this.flushUpdates();
+   }.bind(this));
+   
+   this.events.addEventListener('patch', function(ev) {
+     this.updates.push({type: 'patch', data: ev.data});
+     this.flushUpdates();
+   }.bind(this));
+ };
+ 
+ StreamedGraph.prototype.replaceFullGraph = function(jsonLdText, done) {
+   this.quadStore.clear();
+   eachJsonLdQuad(this.store.rdf, JSON.parse(jsonLdText),
+                  this.quadStore.add.bind(this.quadStore), function() {
+     done();
+   });
+   // or this.store.insert([quad], quad.graph, function() {});
+ };
+
+ /*
+ attempt to parse into rdfstore.Store
+ this.store.load('application/ld+json', jsonLd, function(err, num) {
+ console.log('finished jsonld load: ', num, ' triples');
+
+ attempt to dump contents of rdfstore.Store
+ this.store.registeredGraphs(function (err, rg) {
+ if (!err && !rg.length) {
+ console.log('0 registered graphs in store');
+ }
+ 
+ this.store.graph(function(err, q) {
+ q.triples.forEach(function(t) {
+ console.log(q, t.toString());
+ }.bind(this));
+ }.bind(this));
+ 
+ rg.forEach(function(g) {
+ this.store.graph(g, function(a,b,c) {
+ console.log('graph', g, a, b, c);
+ }.bind(this));
+ }.bind(this));
+ }.bind(this));
+ 
+ }.bind(this));
+  */
+ 
+ StreamedGraph.prototype.patchGraph = function(patchJson, done) {
+   var patch = JSON.parse(patchJson).patch;
+
+   async.series([
+     function(done) {
+       eachJsonLdQuad(this.store.rdf, patch.deletes,
+                      this.quadStore.remove.bind(this.quadStore), done);
+     }.bind(this),
+     function(done) {
+       eachJsonLdQuad(this.store.rdf, patch.adds,
+                      this.quadStore.add.bind(this.quadStore), done);
+     }.bind(this),
+     function seriesDone(done) {
+       done();
+     }.bind(this)
+   ], done);
+ };
+</script>
 
 <dom-module id="streamed-graph">
   <template>
     <style>
      div {
        display: inline-block;
-       width: 15em;
+       width: 25em;
        border: 1px solid gray;
        background: #BFBFBF;
      }
     </style>
     <div>StreamedGraph: {{status}}</div>
   </template>
-  <script src="quadstore.js"></script>
-  <script src="/lib/rdf_store/0.9.7/dist/rdfstore.js"></script>
-
-  <script>
-   var eachJsonLdQuad = function(rdfEnv, jsonLdObj, onQuad) {
-     jsonld.expand(jsonLdObj, function(err, expanded) {
-       expanded.forEach(function(g) {
-         var graph = g['@id'];
-         g['@graph'].forEach(function(subj) {
-           for (var pred in subj) {
-             if (pred.match(/^[^@]/)) {
-               subj[pred].forEach(function(obj) {
-                 var quad = {
-                   subject: rdfEnv.createNamedNode(subj['@id']),
-                   predicate: rdfEnv.createNamedNode(pred),
-                   object: (obj['@id'] ? rdfEnv.createNamedNode(obj['@id']) :
-                            rdfEnv.createLiteral(
-                     obj['@value'], obj['@dt-todo'], obj['@lang-todo'])),
-                   graph: rdfEnv.createNamedNode(graph),
-                 };
-                 onQuad(quad);
-               });
-             }
-           }
-         });
-       });
-     });
-   };
-
-  
-   function StreamedGraph(eventsUrl, onGraphChanged, onStatus) {
-     // holds a rdfstore.js store, which is synced to a server-side
-     // store that sends patches over SSE
-     this.onStatus = onStatus;
-     this.onGraphChanged = onGraphChanged;
-     this.onStatus('startup...');
-     this.quadStore = new QuadStore();
-     
-     this.store = null;
-     this.updates = [];
-     new rdfstore.Store(function(err, store) {
-       this.store = store; // barely used yet
-       this.flushUpdates();
-     }.bind(this));
-
-     this.connect(eventsUrl);
-     this.reconnectOnWake();
-   }
-
-   StreamedGraph.prototype.reconnectOnWake = function() {
-     // it's not this, which fires on every mouse-in on a browser window, and doesn't seem to work for screen-turned-back-on
-     //window.addEventListener('focus', function() { this.connect(eventsUrl); }.bind(this));
-
-   };
-   
-   StreamedGraph.prototype.flushUpdates = function() {
-     if (this.store === null) {
-       requestAnimationFrame(function() { this.flushUpdates() }.bind(this));
-       return;
-     }
-     while(this.updates.length) {
-       var update = this.updates.shift();
-       if (update.type == 'fullGraph') {
-         this.onStatus('sync- full graph update');
-         this.replaceFullGraph(update.data);
-         this.onStatus('synced');
-         this.onGraphChanged();
-       } else if (update.type == 'patch') {
-         this.onStatus('sync- updating');
-         this.patchGraph(update.data);
-         this.onStatus('synced');
-         this.onGraphChanged();
-       } else {
-         throw new Error(update.type);
-       }
-     }
-   };
-   
-   StreamedGraph.prototype.connect = function(eventsUrl) {
-     this.onStatus('connecting...');
-     this.events = new EventSource(eventsUrl);
-     
-     this.events.addEventListener('error', function(ev) {
-       this.onStatus('connection lost- retrying');
-       setTimeout(function() {
-         requestAnimationFrame(function() {
-           this.connect(eventsUrl);
-         }.bind(this));
-       }.bind(this), 3000);
-     }.bind(this));
-     
-     this.events.addEventListener('fullGraph', function(ev) {
-       this.updates.push({type: 'fullGraph', data: ev.data});
-       this.flushUpdates();
-     }.bind(this));
-     
-     this.events.addEventListener('patch', function(ev) {
-       this.updates.push({type: 'patch', data: ev.data});
-       this.flushUpdates();
-     }.bind(this));
-   };
-   
-   StreamedGraph.prototype.replaceFullGraph = function(jsonLdText) {      
-     if (this.store === null) {
-       setTimeout(function() {
-         requestAnimationFrame(function() {
-           this.replaceFullGraph(jsonLdText);
-         }.bind(this));
-       }.bind(this), 100);
-       return;
-     }
-
-     this.quadStore.clear();
-     eachJsonLdQuad(this.store.rdf, JSON.parse(jsonLdText),
-                    this.quadStore.add.bind(this.quadStore));
-     // or this.store.insert([quad], quad.graph, function() {});
-   };
-   
-
-   /*
-   attempt to parse into rdfstore.Store
-   this.store.load('application/ld+json', jsonLd, function(err, num) {
-     console.log('finished jsonld load: ', num, ' triples');
-
-     attempt to dump contents of rdfstore.Store
-     this.store.registeredGraphs(function (err, rg) {
-       if (!err && !rg.length) {
-         console.log('0 registered graphs in store');
-       }
-       
-       this.store.graph(function(err, q) {
-         q.triples.forEach(function(t) {
-           console.log(q, t.toString());
-         }.bind(this));
-       }.bind(this));
-       
-       rg.forEach(function(g) {
-         this.store.graph(g, function(a,b,c) {
-           console.log('graph', g, a, b, c);
-         }.bind(this));
-       }.bind(this));
-     }.bind(this));
-     
-   }.bind(this));
-   */
- 
-   StreamedGraph.prototype.patchGraph = function(patchJson) {
-     var patch = JSON.parse(patchJson).patch;
-     eachJsonLdQuad(this.store.rdf, patch.deletes,
-                    this.quadStore.remove.bind(this.quadStore));
-     eachJsonLdQuad(this.store.rdf, patch.adds,
-                    this.quadStore.add.bind(this.quadStore));
-   };
-   
+  <script>   
    Polymer({
      is: "streamed-graph",
      properties: {
