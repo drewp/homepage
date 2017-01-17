@@ -8,6 +8,7 @@ from bottle import route, run, template
 
 top = "/my/post"
 recent = 8
+skipTheseBigDirs = ['/my/post/1956newspaper', '/my/post/dash.copy']
 
 tmpl = '''
 <ul n:render="sequence" n:data="files">
@@ -27,7 +28,7 @@ def listFiles(top, sub=''):
     for filename in os.listdir(os.path.join(top, sub)):
         try:
             full = os.path.join(top, sub, filename)
-            if os.path.isdir(full):
+            if os.path.isdir(full) and full not in skipTheseBigDirs:
                 for row in listFiles(top, os.path.join(sub, filename)):
                     yield row
             else:
