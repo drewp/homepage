@@ -11,6 +11,11 @@
     "iron-component-page": "PolymerElements/iron-component-page#~1.0.5",
     "paper-menu": "PolymerElements/paper-menu#~1.1.0",
     "platinum-sw": "PolymerElements/platinum-sw#~1.2.3",
-    "google-sheets": "GoogleWebComponents/google-sheets#~1.0.5"
+    "google-sheets": "GoogleWebComponents/google-sheets#~1.0.5",
+    "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#^1.0.12",
+    "paper-autocomplete": "^1.0.6",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.0.4",
+    "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.6",
+    "iron-form": "PolymerElements/iron-form#^1.1.4"
   }
 }
