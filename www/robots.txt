@@ -3,6 +3,7 @@ Disallow: *.dv$
 Disallow: *.fli$
 Disallow: /boardsie/diagram.png
 Disallow: /wikis/
+Disallow: /lib/
 Disallow: /post/
 Disallow: /darcs/?r=light9;a=annotate_shade
 Disallow: /darcs/?r=light9;a=annotate_normal
