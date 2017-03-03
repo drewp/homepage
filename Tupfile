@@ -1,0 +1,1 @@
+: www/rdf/streamed-graph.ts |> nodejs node_modules/typescript/bin/tsc --module amd --noImplicitThis --strictNullChecks --outFile %o %f |> www/rdf/streamed-graph.js
