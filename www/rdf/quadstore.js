@@ -1,4 +1,4 @@
-define(function(require, exports, module) {
+define([], function() {
     
 // a more straightforward store than rdfstore.Store, which I haven't
 // figured out yet wrt quads.
@@ -6,7 +6,6 @@ function QuadStore() {
     this.nodeLookup = new Map(); // ntstring: node
     this.index = new Map();  // {graphNt: {subjNt: {predNt: {objNt: true}}}}
 }
-exports.QuadStore = QuadStore;
 
 QuadStore.prototype.clear = function() {
     this.index.clear();
@@ -96,4 +95,5 @@ QuadStore.prototype.quads = function(match, onQuad) {
         }
     });
 };
+return QuadStore;
 });

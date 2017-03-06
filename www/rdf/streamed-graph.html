@@ -13,18 +13,8 @@
     </style>
     <div>StreamedGraph: {{status}}</div>
   </template>
-  <script src="/lib/require/require-2.3.3.js"></script>
   <script>
-   require.config({
-       paths: {
-           "streamed-graph": "/rdf/streamed-graph",
-           "quadstore-module": "/rdf/quadstore",
-           "async-module": "/lib/async/80f1793/async",
-           "jsonld-module": "/lib/jsonld.js/0.4.5/js/jsonld",
-           "rdfstore-module": "/lib/rdf_store/0.9.7/dist/rdfstore",
-       }
-   });
-   require(['streamed-graph'], function(streamed_graph) {
+   requirejs(['streamed-graph'], function(streamed_graph) {
        Polymer({
            is: "streamed-graph",
            properties: {
@@ -41,8 +31,8 @@
                this.graph = {version: this.graph.version + 1, graph: this.sg };
            }
        });
-
    });
+
   </script>
 </dom-module>
 

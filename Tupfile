@@ -1,1 +1,3 @@
-: www/rdf/streamed-graph.ts |> nodejs node_modules/typescript/bin/tsc --module amd --noImplicitThis --strictNullChecks --outFile %o %f |> www/rdf/streamed-graph.js
+# Most options are in tsconfig.json
+# Add  --traceResolution for debug logging
+: www/rdf/streamed-graph.ts |> nodejs node_modules/typescript/bin/tsc --outFile %o  |> www/rdf/streamed-graph.js

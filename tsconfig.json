@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "baseUrl": ".",
+        "paths": {
+            "async": ["www/lib/async/80f1793/async"],
+            "jsonld": ["www/lib/jsonld.js/0.4.11/js/jsonld"],
+            "rdfstore": ["www/lib/rdf_store/0.9.7/dist/rdfstore"]
+        }
+    },
+    "files": [
+        "www/rdf/streamed-graph.ts"
+    ]
+}
