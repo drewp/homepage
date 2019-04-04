@@ -12,6 +12,15 @@
        }
      }
      return uri;
-   }
+   },
+   expandUri: function(s) {
+     for (var short of Object.keys(window.NS)) {
+       var prefix = window.NS[short];
+       if (s.indexOf(short+":") == 0) {
+         return prefix + s.substr(short.length + 1);
+       }
+     }
+     return s;
+   },
  };
 </script>
