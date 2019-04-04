@@ -5,6 +5,9 @@
      if (uri === undefined) {
        return uri;
      }
+     if (uri == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
+       return "a";
+     }
      for (var short of Object.keys(window.NS)) {
        var prefix = window.NS[short];
        if (uri.indexOf(prefix) == 0) {
