@@ -1,0 +1,26 @@
+
+
+<dom-module id="graph-view">
+  <template>
+    <style>
+    </style>
+    graph-view:
+    <pre>{{graphJson}}</pre>
+ 
+          var docs = {}; // uri : observable(doc)
+          model.docLink = function(uri) {
+            if (uri.type == 'uri') {
+              uri = uri.value;
+            }
+            if (_.isUndefined(docs[uri])) {
+              docs[uri] = ko.observable("...");
+              $.getJSON("doc", {uri: uri}, function(data) {
+                docs[uri](data.comment); // might be undefined
+              });
+            }
+            return docs[uri];
+          };
+
+   
+  </script>
+</dom-module>

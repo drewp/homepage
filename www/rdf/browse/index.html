@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>RDF browse</title>
+  <meta charset="utf-8" />
+  <script src="/lib/polymer/1.0.9/webcomponentsjs/webcomponents.min.js"></script>
+  <script src="/lib/require/require-2.3.3.js"></script>
+  <script>
+    requirejs.config({
+      paths: {
+        "streamed-graph": "/rdf/streamed-graph",
+        "quadstore": "/rdf/quadstore",
+        "async-module": "/lib/async/80f1793/async",
+        "async": "/lib/async/80f1793/async",
+        "jsonld-module": "/lib/jsonld.js/0.4.11/js/jsonld",
+        "jsonld": "/lib/jsonld.js/0.4.11/js/jsonld",
+        "rdfstore": "/lib/rdf_store/0.9.7/dist/rdfstore",
+        "moment": "/lib/moment.min",
+        "underscore": "/lib/underscore-1.5.2.min",
+      }
+    });
+  </script>
+  <script>
+    window.NS = {
+      dev: 'http://projects.bigasterisk.com/device/',
+      room: 'http://projects.bigasterisk.com/room/',
+      rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+      sensor: 'http://bigasterisk.com/homeauto/sensor/',
+      xs: 'http://www.w3.org/2001/XMLSchema#',
+    };
+  </script>
+
+  <link rel="import" href="../streamed-graph.html">
+  <link rel="import" href="/lib/polymer/1.0.9/polymer/polymer.html">
+</head>
+
+<body>
+
+  <template id="t" is="dom-bind">
+
+
+    map any rdf resource url to this page and we'll display info about it
+    or enter a url here:
+    <input type="entry" id="subjectRequest" value="http://projects.bigasterisk.com/...">
+
+    <!--
+         requested uri or window.location uri;
+         pick sources (SSE or static) to read;
+         pick how to display-- graph element or some more-specific element;
+         draw element, add notes on how to reuse it.
+       -->
+
+
+    <streamed-graph url="https://bigasterisk.com/.../graph/events" graph="{{graph}}"></streamed-graph>
+    <div id="out">
+    </div>
+
+    <script type="module">
+      import { render } from '/lib/lit-html/1.0.0/lit-html.js';
+      import { graphView } from '/rdf/browse/graphView.js';
+      const sg = document.querySelector('streamed-graph');
+
+      const out = document.querySelector('#out');
+      const paint = () => {
+        if (!sg.graph || !sg.graph.graph) {
+          setTimeout(paint, 100);
+          return;
+        }
+        //subscribe to sg changes somehow
+        setInterval(() => {
+          setTimeout(() => {
+            requestAnimationFrame(() => {
+              render(graphView(sg.graph.graph), out);
+            });
+          }, 1000);
+        }, 1000);
+
+      };
+      setTimeout(paint, 100);
+    </script>
+  </template>
+  <script>
+    var autobind = document.querySelector('#t');
+
+    // The dom-change event signifies when the template has stamped its DOM.
+    t.addEventListener('dom-change', function () {
+      // auto-binding template is ready.
+
+    });
+  </script>
+</body>
+
+</html>
