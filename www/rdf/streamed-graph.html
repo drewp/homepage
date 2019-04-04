@@ -11,7 +11,7 @@
          background: #BFBFBF;
      }
     </style>
-    <div>StreamedGraph: {{status}}</div>
+    <div>StreamedGraph <a href="{{url}}">[source]</a>: {{status}}</div>
   </template>
   <script>
    requirejs(['streamed-graph'], function(streamed_graph) {
@@ -25,7 +25,8 @@
            _onUrl: function(url) {
                if (this.sg) { this.sg.close(); }
                this.sg = new streamed_graph.StreamedGraph(
-                   url, this.onGraphChanged.bind(this), this.set.bind(this, 'status'));
+                   url, this.onGraphChanged.bind(this), this.set.bind(this, 'status'), window.NS);
+              
            },
            onGraphChanged: function() {
                this.graph = {version: this.graph.version + 1, graph: this.sg };

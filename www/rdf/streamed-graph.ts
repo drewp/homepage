@@ -20,6 +20,7 @@ function eachJsonLdQuad(rdfEnv: any, jsonLdObj: object, onQuad: (Quad)=>void, do
         if (err) { throw new Error(); }
         expanded.forEach(function(g) {
             var graph = g['@id'];
+            var graphNode = rdfEnv.createNamedNode(graph);
             g['@graph'].forEach(function(subj) {
                 for (var pred in subj) {
                     if (pred.match(/^[^@]/)) {
@@ -29,11 +30,20 @@ function eachJsonLdQuad(rdfEnv: any, jsonLdObj: object, onQuad: (Quad)=>void, do
                                 predicate: rdfEnv.createNamedNode(pred),
                                 object: (obj['@id'] ? rdfEnv.createNamedNode(obj['@id']) :
                                          rdfEnv.createLiteral(
-                                             obj['@value'], obj['@type'], obj['@language'])),
-                                graph: rdfEnv.createNamedNode(graph),
+                                             obj['@value'], obj['@language'], obj['@type'])),
+                                graph: graphNode,
                             };
                             onQuad(quad);
                         });
+                    } else  {
+                        if (pred === "@type") {
+                            onQuad({
+                                subject: rdfEnv.createNamedNode(subj['@id']),
+                                predicate: rdfEnv.createNamedNode('rdf:type'),
+                                object: rdfEnv.createNamedNode(subj[pred]),
+                                graph: graphNode,
+                            });
+                        }
                     }
                 }
             });
@@ -49,7 +59,7 @@ export class StreamedGraph {
     store: rdfstore.Store;
     events: sse.IEventSourceStatic;
     updates: Array<Update>;
-    constructor(eventsUrl, onGraphChanged, onStatus) {
+    constructor(eventsUrl: string, onGraphChanged: ()=>void, onStatus: (string)=>void, prefixes: Array<Record<string, string>>) {
         console.log('new StreamedGraph', eventsUrl);
         // holds a rdfstore.js store, which is synced to a server-side
         // store that sends patches over SSE
@@ -62,8 +72,11 @@ export class StreamedGraph {
         this.updates = [];
         rdfstore.create((err, store) => {
             this.store = store; // barely used yet- data is really in quadStore
+            Object.keys(prefixes).forEach((prefix) => {
+                this.store.setPrefix(prefix, prefixes[prefix]);
+            });
             this.flushUpdates();
-
+            
             this.connect(eventsUrl);
             this.reconnectOnWake();
         });
@@ -134,6 +147,26 @@ export class StreamedGraph {
             this.events.close();
         }
     }
+    
+    testEventUrl(eventsUrl: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.onStatus('testing connection');
+            fetch(eventsUrl, {
+                method: "HEAD",
+                credentials: "include",
+            }).then((value)=>{
+                if (value.status == 403) {
+                    reject();
+                    return;
+                }
+                resolve();
+            }).catch((err)=>{
+                reject();
+             
+            });
+            
+        });
+    }
 
     connect(eventsUrl: string) {
         this.onStatus('start connect...');
@@ -146,6 +179,7 @@ export class StreamedGraph {
         
         this.events.addEventListener('error', (ev) => {
             // todo: this is piling up tons of retries and eventually multiple connections
+            this.testEventUrl(eventsUrl);
             this.onStatus('connection lost- retrying');
             setTimeout(() => {
                 requestAnimationFrame(() => {
