@@ -37,11 +37,13 @@ function eachJsonLdQuad(rdfEnv: any, jsonLdObj: object, onQuad: (Quad)=>void, do
                         });
                     } else  {
                         if (pred === "@type") {
-                            onQuad({
-                                subject: rdfEnv.createNamedNode(subj['@id']),
-                                predicate: rdfEnv.createNamedNode('rdf:type'),
-                                object: rdfEnv.createNamedNode(subj[pred]),
-                                graph: graphNode,
+                            subj[pred].forEach((obj) => {
+                                onQuad({
+                                    subject: rdfEnv.createNamedNode(subj['@id']),
+                                    predicate: rdfEnv.createNamedNode('rdf:type'),
+                                    object: rdfEnv.createNamedNode(obj),
+                                    graph: graphNode,
+                                });
                             });
                         }
                     }
