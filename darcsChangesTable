@@ -40,10 +40,10 @@ def isoDate(secs):
 
 def atomEntries(filenames):
     """all entries from all atom files. Each one is returned as
-       (secs, repo, entryEtree)"""    
+       (secs, repo, entryEtree)"""
     entries = []
     for filename in filenames:
-        feed = fromstring(open(filename).read())
+        feed = fromstring(open(filename).read().replace('\x0c', ''))
         for entry in feed.findall(ATOM + 'entry'):
             entries.append(ProjEntry(entry))
     return entries
@@ -57,7 +57,7 @@ def formatTable(entries,
     rows = [T.tr[T.th['Repo'], T.th['Date'], T.th['Patch name']]]
     zebra = 0
     for i, entry in enumerate(entries[:maxRows]):
-        
+
         if entry.repo != lastRepo:
             rowSpan = 1
             for nextEntry in entries[i + 1:]:
@@ -97,7 +97,7 @@ def linkEntry(entry):
     return entry
 
 def makeFeed(entries):
-    
+
     return A.feed(A.generator("darcsChangesTable",
                               uri="http://bigasterisk.com/darcs/?r=homepage;a=headblob;f=/darcsChangesTable"),
                   A.id("http://bigasterisk.com/darcs/atom"),
