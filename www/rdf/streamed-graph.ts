@@ -61,7 +61,7 @@ export class StreamedGraph {
     store: rdfstore.Store;
     events: sse.IEventSourceStatic;
     updates: Array<Update>;
-    constructor(eventsUrl: string, onGraphChanged: ()=>void, onStatus: (string)=>void, prefixes: Array<Record<string, string>>) {
+    constructor(eventsUrl: string, onGraphChanged: ()=>void, onStatus: (string)=>void, prefixes: Array<Record<string, string>>, staticGraphUrls: Array<string>) {
         console.log('new StreamedGraph', eventsUrl);
         // holds a rdfstore.js store, which is synced to a server-side
         // store that sends patches over SSE
@@ -81,6 +81,14 @@ export class StreamedGraph {
             
             this.connect(eventsUrl);
             this.reconnectOnWake();
+        });
+
+        staticGraphUrls.forEach((url) => {
+            fetch(url).then((response) => response.text())
+                .then((body) => {
+                    // parse with n3, add to output
+                });
+            });
         });
     }
     reconnectOnWake() {
@@ -171,6 +179,8 @@ export class StreamedGraph {
     }
 
     connect(eventsUrl: string) {
+        // need to exit here if this obj has been replaced
+        
         this.onStatus('start connect...');
         this.close();
         if (this.events && this.events.readyState != EventSource.CLOSED) {
