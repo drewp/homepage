@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>live audio</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <h2>live <span id="host"></span> mic</h2>
+    <canvas id='canvas' width="800" height="350"></canvas>
+
+    <div>
+      <label><input type="radio" name="host" value="bed" checked> bed</label>
+      <label><input type="radio" name="host" value="living" > living</label>
+      <label><input type="radio" name="host" value="frontbed" > frontbed</label>
+      <audio src="/piAudio/bed/mic" id="audio" preload="no" controls>audio element not supported</audio></div>
+    <div>    <button id="play">play</button> <button id="stop">stop</button></div>
+    <div><span id="status"></span></div>
+    <script src="main.js"></script>
+    <script>
+     const audio = document.querySelector('#audio');
+     const status = document.querySelector('#status');
+     
+     document.querySelectorAll("input[name=host]").forEach((el) => {
+       el.addEventListener('click', () => {
+         audio.src = `/piAudio/${el.value}/mic`;
+         document.querySelector('#host').innerText = el.value;
+       });
+     });
+   
+     audio.addEventListener('timeupdate', (ev) => {
+       status.innerText = `time: ${audio.currentTime}`;
+     });
+     audio.addEventListener('ended', (ev) => {
+       status.innerText = `ended`;
+     });
+     audio.addEventListener('waiting', (ev) => {
+       status.innerText = `waiting for data`;
+     });
+     audio.addEventListener('stalled', (ev) => {
+       status.innerText = `stalled for data`;
+     });
+     
+     
+     document.querySelector("#play").addEventListener("click", () => {
+       audio.play();
+     });
+     document.querySelector("#stop").addEventListener("click", () => {
+       audio.pause();
+     });
+     
+     document.querySelector("input[checked]").click();
+    </script>
+  </body>
+  
+</html>
