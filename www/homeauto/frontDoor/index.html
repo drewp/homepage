@@ -1,154 +1,152 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>frontDoor</title>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="36000">
-    <link href='https://fonts.googleapis.com/css?family=Ubuntu:500' rel='stylesheet' type='text/css'>
+    <meta http-equiv="refresh" content="36000" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu:500"
+      rel="stylesheet"
+      type="text/css"
+    />
     <script src="/lib/polymer/1.0.9/webcomponentsjs/webcomponents-lite.js"></script>
-     <script src="build/bundle.js"></script>
-    
+    <script type="module" src="build/bundle.js?v3"></script>
 
-    <link rel="import" href="/lib/polymer/1.0.9/polymer/polymer.html">
-    <link rel="import" href="/lib/polymer/1.0.9/iron-ajax/iron-ajax.html">
-    <link rel="import" href="/lib/polymer/1.0.9/paper-button/paper-button.html">
-    <link rel="import" href="/rdf/rdf-oneshot.html">
-
-    <link rel="import" href="/rdf/rdf-uri.html">
-    <link rel="import" href="/rdf/streamed-graph.html">
-    <link rel="import" href="/rdf/bigast-meters.html?v2">
-    <link rel="import" href="/rdf/bigast-calendar.html?v4">
-    <link rel="import" href="/rdf/bigast-clock.html">
-
-    <link rel="import" href="/room/ari/timed-overlay-process.html">
-    <link rel="import" href="/room/ari/activities.html">
-    <link rel="import" href="/countdown/countdown-view.html">
-
-
-    <link rel="import" href="/frontDoor/rfid/rfid-console.html">
-    <link rel="import" href="forecast-io.html">
     <style>
-     html { background: gray; }
-     body {
-         width: 736px;
-         height: 416px;
-         color: white;
-         background: black;
-         margin: 0;
-         position: fixed;
-         font-family: Ubuntu;
-         font-size: 13px;
-     }
-     #calendar {
-         background: #808080;
-     }
+      html {
+        background: gray;
+      }
+      body {
+        width: 736px;
+        height: 410px;
+        color: white;
+        background: black;
+        margin: 0;
+        position: fixed;
+        font-family: Ubuntu;
+        font-size: 13px;
+      }
+      #calendar {
+        background: #808080;
+      }
 
-     #rows, #rows2 {
-         display: flex;
-         height: 100%;
-         justify-content: space-around;
-         flex-direction: column;
-     }
-     #cols {
-         display: flex;
-         height: 100%;
-         justify-content: space-around;
-     }
-     #cols > div > * {
-         padding: 8px;
-         margin: 4px;
-     }
-     #cols > div {
-         display: flex;
-         flex-direction: column;
-     }
-     streamed-graph {
-         display: none;
-     }
+      #rows,
+      #rows2 {
+        display: flex;
+        height: 100%;
+        justify-content: space-around;
+        flex-direction: column;
+      }
+      #cols {
+        display: flex;
+        height: 100%;
+        justify-content: space-around;
+      }
+      #cols > div > * {
+        padding: 8px;
+        margin: 4px;
+      }
+      #cols > div {
+        display: flex;
+        flex-direction: column;
+      }
+      streamed-graph {
+        display: none;
+      }
+      bigast-multiformat-clock {
+        font-size: 128%;
+      }
     </style>
   </head>
   <body>
-    <script>
-     window.NS = {
-         dev: 'http://projects.bigasterisk.com/device/',
-         room: 'http://projects.bigasterisk.com/room/',
-         rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-         event: 'http://bigasterisk.com/event#',
-     };
-    </script>
-
-
-    <dom-module id="bigast-house-temps">
-      <template>
-        <style>
-         :host {
-             background: #242465;
-         }
-         .tempF {
-             color: pink;
-         }
-         div {
-             white-space: nowrap;
-             }
-        </style>
-        <streamed-graph
-            url="/sse_collector/graph/frontDoor" graph="{{graph}}"
-            style="display: none">
-        </streamed-graph>
-        <div>
-          <div>Living room: <bigast-meter-temperature graph="{{graph}}" device="http://bigasterisk.com/homeauto/sensor/tempHumidLivingRoomCeiling"></bigast-meter-temperature></div>
-          <div>Front bed:   <bigast-meter-temperature graph="{{graph}}" device="http://bigasterisk.com/homeauto/piFrontbed/oneWire/dev-000003a5be13"></bigast-meter-temperature></div>
-          <div>Garage:      <bigast-meter-temperature graph="{{graph}}" device="http://bigasterisk.com/homeauto/piGarage/oneWire/dev-000003a5c0fb"></bigast-meter-temperature></div>
-          <div>Workshop:    <bigast-meter-temperature graph="{{graph}}" device="http://bigasterisk.com/homeauto/piWorkshop/oneWire/dev-000003a5b709"></bigast-meter-temperature></div>
-          <div>Ari:         <bigast-meter-temperature graph="{{graph}}" device="http://projects.bigasterisk.com/room/nightlightAriTemperature"></bigast-meter-temperature></div>
-        </div>
-
-      </template>
-      <script>
-       HTMLImports.whenReady(function () {
-           Polymer({
-               is: "bigast-house-temps",
-               properties: {
-                   graph: { type: Object, notify: true},
-               },
-               ready: function() {
-
-               },
-           });
-       });
-      </script>
-    </dom-module>
+    <streamed-graph url="/sse_collector/graph/frontDoor"></streamed-graph>
 
     <div id="rows">
-
-    <div id="cols">
-      <div>
-        <div style="display: flex">
-          <bigast-multiformat-clock></bigast-multiformat-clock>
+      <div id="cols">
+        <div>
+          <div style="display: flex">
+            <bigast-multiformat-clock></bigast-multiformat-clock>
+          </div>
+          <countdown-view></countdown-view>
         </div>
-        <countdown-view></countdown-view>
+        <div style="flex-basis: 580px">
+          <bigast-calendar></bigast-calendar>
+        </div>
+        <rfid-console></rfid-console>
       </div>
-      <div style="flex-basis: 580px">
-        <bigast-calendar></bigast-calendar>
-      </div>
-      <rfid-console></rfid-console>
-    </div>
-    <div id="cols">
-      <forecast-io></forecast-io>
-      <div id="rows2">
-        <bigast-house-temps></bigast-house-temps>
-        <bigast-computer-usage></bigast-computer-usage>
-        <bigast-house-power></bigast-house-power>
-      </div>
-    </div>
+      <div id="cols">
+        <forecast-io lat="37.852" lon="-122.237"></forecast-io>
+        <div id="rows2">
+          <style>
+            .tempValues {
+              background: #242465;
+            }
+            bigast-graph-value div {
+              white-space: nowrap;
+            }
+          </style>
+          <div class="tempValues">
+            <div>
+              <bigast-graph-value
+                subj="http://bigasterisk.com/homeauto/sensor/tempHumidLivingRoomCeiling"
+                pred="http://projects.bigasterisk.com/room/temperatureF"
+                label="Living room"
+                numberAs="degreeF"
+              ></bigast-graph-value>
+            </div>
+            <div>
+              <bigast-graph-value
+                subj="http://bigasterisk.com/homeauto/piFrontbed/oneWire/dev-000003a5be13"
+                pred="http://projects.bigasterisk.com/room/temperatureF"
+                label="Front bed"
+                numberAs="degreeF"
+              ></bigast-graph-value>
+            </div>
+            <div>
+              <bigast-graph-value
+                subj="http://bigasterisk.com/homeauto/piGarage/oneWire/dev-000003a5c0fb"
+                pred="http://projects.bigasterisk.com/room/temperatureF"
+                label="Garage"
+                numberAs="degreeF"
+              ></bigast-graph-value>
+            </div>
+            <div>
+              <bigast-graph-value
+                subj="http://bigasterisk.com/homeauto/piWorkshop/oneWire/dev-000003a5b709"
+                pred="http://projects.bigasterisk.com/room/temperatureF"
+                label="Workshop"
+                numberAs="degreeF"
+              ></bigast-graph-value>
+            </div>
+            <div>
+              <bigast-graph-value
+                subj="http://projects.bigasterisk.com/room/nightlightAriTemperature"
+                pred="http://projects.bigasterisk.com/room/temperatureF"
+                label="Ari"
+                numberAs="degreeF"
+              ></bigast-graph-value>
+            </div>
+          </div>
 
-    </div>
-    <div style="position: absolute; left: 0px; top: 420px;">
-      <a href=".">reload</a> /
-      <a href="/sse_collector/login">login</a>
-    </div>
+          <bigast-graph-value
+            subj="http://projects.bigasterisk.com/room/computerTimeTodayAri"
+            pred="http://projects.bigasterisk.com/room/usedMinutes"
+            label="Ari time used today"
+            numberAs="minutes"
+          ></bigast-graph-value>
 
-    <script>
-    </script>
+          <bigast-graph-value
+            subj="http://projects.bigasterisk.com/room/housePower"
+            pred="http://projects.bigasterisk.com/room/instantDemandWatts"
+            label="Current power demand"
+            numberAs="watts"
+          ></bigast-graph-value>
+        </div>
+      </div>
+      <div style="position: absolute; left: 0px; top: 420px;">
+        <a href=".">reload</a> /
+        <a href="/sse_collector/login">login</a>
+      </div>
+    </div>
   </body>
 </html>
