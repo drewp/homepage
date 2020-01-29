@@ -8,8 +8,9 @@ outurl="http://darcs.bigasterisk.com/"
 
 cd /my/darcs
 for dir in *; do
-	if [ -d $dir ] ; then
-		darcs changes --repodir $dir --last 50 --xml-output | \
+    if [ -d $dir ] ; then
+                # sometimes I put ^L in my comments, and xsltproc will fail on those
+		darcs changes --repodir $dir --last 50 --xml-output | perl -pe 's/\x0c//g' | \
 			xsltproc \
 				--param repoURL "'$outurl$dir/'" \
 				--param repoName "'$dir'" \
